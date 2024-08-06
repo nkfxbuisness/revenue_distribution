@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 import Stepper from "../components/auth/Stepper";
 import StepperNavigator from "../components/auth/StepperNavigator";
 import BasicInfo from "../components/auth/steps/BasicInfo";
+import SetCredentials from "../components/auth/steps/SetCredentials";
 import AccountDetails from "../components/auth/steps/AccountDetails";
 import KYCdetails from "../components/auth/steps/KYCdetails";
-import Referral from "../components/auth/steps/Referral";
+// import Referral from "../components/auth/steps/";
 import { StepperContext } from "../context/StepperContext";
 import showToastMessage from "../components/toast/Toast";
 import successVideo from "../components/images/success.mp4"
@@ -22,10 +23,10 @@ const RegistrationPage = () => {
   }
 
   const steps = [
+    "Set your credentials",
     "Basic Information",
     "Bank Account",
     "KYC Details",
-    "Set your credentials",
   ];
 
 //   console.log(steps);
@@ -33,13 +34,13 @@ const RegistrationPage = () => {
   const displayStep = (step) => {
     switch (step) {
       case 1:
-        return <BasicInfo />;
+        return <SetCredentials />;
       case 2:
-        return <AccountDetails />;
+        return <BasicInfo />;
       case 3:
-        return <KYCdetails />;
+        return <AccountDetails />;
       case 4:
-        return <Referral />;
+        return <KYCdetails />;
       default:
         return null;
     }

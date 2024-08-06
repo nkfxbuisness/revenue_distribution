@@ -14,11 +14,11 @@ const KYCdetails = () => {
   const handleFileChange=(doc,e)=>{
     if(doc==="pan"){
       setPan(e.target.files[0]);
-      document.getElementById("PANfileName").innerHTML=pan.name;
+      document.getElementById("PANfileName").innerHTML=pan?.name;
     }
     if(doc=="aadhaar"){
       setAadhaar(e.target.files[0]);
-      document.getElementById("AadhaarFileName").innerHTML=aadhaar.name;
+      document.getElementById("AadhaarFileName").innerHTML=aadhaar?.name;
     }
   }
   const handleUpload=()=>{document.getElementById('PANupload').addEventListener('change', function(event) {
