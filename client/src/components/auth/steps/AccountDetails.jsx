@@ -11,21 +11,7 @@ const AccountDetails = () => {
   return (
     <>
       <div className="flex flex-col gap-4 w-2/3 mx-auto">
-        <div className="flex flex-col w-full text-left gap-1">
-          <label
-            htmlFor="accountHolderName"
-            className="font-bold text-lg text-blue-600"
-          >Account Holder</label>
-          <input
-            type="text"
-            id="accountHolderName"
-            name='accountHolderName'
-            value={userData["accountHolderName"] || ""}
-            onChange={handleChange}
-            className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400"
-            required
-          />
-        </div>
+        
         <div className="flex flex-col w-full text-left gap-1">
           <label
             htmlFor="accountNumber"
@@ -50,6 +36,22 @@ const AccountDetails = () => {
             value={userData["IFSC"] || ""}
             onChange={handleChange}
             className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400"
+            required
+          />
+        </div>
+        <div className="flex flex-col w-full text-left gap-1">
+          <label
+            htmlFor="bankName"
+            className="font-bold text-lg text-blue-600"
+          >Bank </label>
+          <input
+            type="text"
+            id="bankName"
+            name='bankName'
+            value={userData["bankName"] || ""}
+            onChange={handleChange}
+            className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400"
+            placeholder="eg. SBI"
             required
           />
         </div>
