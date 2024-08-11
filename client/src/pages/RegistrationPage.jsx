@@ -67,7 +67,7 @@ const RegistrationPage = () => {
       "IFSC",
       "PAN",
       "aadhaar",
-      "accountHolderName",
+      "bankName",
       "accountNumber",
       "email",
       "mobile",

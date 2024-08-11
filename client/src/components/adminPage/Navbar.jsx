@@ -7,10 +7,11 @@ import { FiUser } from "react-icons/fi";
 // import { BiLogOut } from "react-icons/bi";
 import { MdOutlineLogout } from "react-icons/md";
 import user from "../toast/user"
+
 const Navbar = () => {
   return (
     <>
-        <div className='flex w-full justify-between px-10 py-2 bg-white text-blue-800 items-center fixed top-0 z-30'>
+      <div className='flex w-full justify-between px-10 py-2 bg-white text-blue-800 items-center fixed top-0 z-30'>
             <div className='flex gap-2 items-center'>
                 <BsGraphUpArrow className='text-2xl text-blue-800'/>
                 <p className='text-2xl font-bold'>Revenue Distribution</p>
