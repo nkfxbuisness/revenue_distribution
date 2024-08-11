@@ -2,53 +2,55 @@ import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { MdDashboard } from "react-icons/md";
 import { FaWallet } from "react-icons/fa";
-import { PiHandWithdrawFill } from "react-icons/pi";
 import { RiTeamLine } from "react-icons/ri";
 import { BiLogOut } from "react-icons/bi";
 import { GrValidate } from "react-icons/gr";
 import { MdOutlineManageAccounts } from "react-icons/md";
 import user from "../toast/user";
+import { SiTicktick } from "react-icons/si";
+import { PiHandWithdrawFill } from "react-icons/pi";
+import { RiUserAddFill } from "react-icons/ri";
 
 const Sidebar = () => {
-
+ 
   const location = useLocation();
   const currentPath = location.pathname;
-  const accountActivation = {
-      name: "Active Account",
-      route: "activeAccount",
-      icon: <MdOutlineManageAccounts />,
-      isActive: currentPath.includes("activeAccount"),
-  }
   const fields = [
     {
-      name: "Dashboard",
-      route: "dashboard",
-      icon: <MdDashboard />,
-      isActive: currentPath.includes("dashboard"),
+      name: "Account Activation",
+      route: "accountActivation",
+      icon: <SiTicktick />,
+      isActive: currentPath.includes("accountActivation"),
     },
     {
-      name: "Wallet",
-      route: "wallet",
-      icon: <FaWallet />,
-      isActive: currentPath.includes("wallet"),
-    },
-    {
-      name: "Withdraw",
-      route: "withdraw",
+      name: "Withdrawl Requests",
+      route: "withdrawRequest",
       icon: <PiHandWithdrawFill />,
-      isActive: currentPath.includes("withdraw"),
+      isActive: currentPath.includes("withdrawRequest"),
     },
     {
-      name: "Referral",
-      route: "referral",
+      name: "Profit Update",
+      route: "profitUpdate",
+      icon: <PiHandWithdrawFill />,
+      isActive: currentPath.includes("profitUpdate"),
+    },
+    {
+      name: "Update Diposite",
+      route: "updateDiposite",
       icon: <GrValidate />,
-      isActive: currentPath.includes("referral"),
+      isActive: currentPath.includes("updateDiposite"),
     },
     {
-      name: "Genealogy",
-      route: "team",
+      name: "Comission Distribution",
+      route: "ComissionDistribution",
       icon: <RiTeamLine />,
-      isActive: currentPath.includes("team"),
+      isActive: currentPath.includes("ComissionDistribution"),
+    },
+    {
+      name: "Create Admin",
+      route: "createAdmin",
+      icon: <RiUserAddFill />,
+      isActive: currentPath.includes("createAdmin"),
     },
     {
       name: "Logout",
@@ -64,29 +66,6 @@ const Sidebar = () => {
         className=" flex flex-col h-screen fixed right-0 bg-white pl-0 pr-3 py-5 mx-2 mt-12"
         style={{ width: 285}}
       > 
-        {user.isActive?"":<>
-        {accountActivation.isActive? (
-          <Link to={`${accountActivation.route}`}>
-            <div className="w-full h-10 bg-blue-50 text-blue-800 border-l-2 border-blue-800 font-bold flex my-2 rounded-r-md pr-2 pl-5 py-4 gap-2 items-center">
-              <span className="text-2xl items-center ">
-                {accountActivation.icon}
-              </span>
-              {accountActivation.name}
-            </div>
-          </Link>
-        ) : (
-          <Link to={`${accountActivation.route}`}>
-            <div className="w-full h-10 bg-white flex  my-2 rounded-r-md pr-2 pl-5 py-4  gap-2 items-center">
-              <span className="text-2xl items-center ">
-                {accountActivation.icon}
-              </span>
-              {accountActivation.name}
-            </div>
-          </Link>
-        )}</>}
-        
-        {user.isActive?
-        <>
           {fields.map((field) => (
             <>
               {field.isActive ? (
@@ -108,9 +87,8 @@ const Sidebar = () => {
                   </div>
                 </Link>
               )}
-            </> 
-          ))} </>
-        :""}
+            </>  ))
+           } 
 
       </div>
     </>
