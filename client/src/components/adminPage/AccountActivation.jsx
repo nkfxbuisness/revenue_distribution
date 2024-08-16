@@ -25,7 +25,7 @@ const AccountActivation = () => {
   return (
     <>
       <div className="grid grid-cols-2 h-full">
-        <div className="col-span-1 h-full  flex flex-col py-10 px-5 w-4/5 mx-auto overflow-auto">
+        <div className="col-span-1 h-screen  flex flex-col py-10 px-5 w-4/5 mx-auto overflow-y-auto">
           {/* name  */}
           <div className="flex flex-col w-full text-left gap-1">
             <label htmlFor="name" className="font-bold text-lg text-blue-600">
@@ -203,7 +203,7 @@ const AccountActivation = () => {
             </div>
           </div>
         </div>
-        <div className="col-span-1 h-full overflow-y-auto flex py-10">
+        <div className="col-span-1 h-screen overflow-y-auto flex py-10">
           {!imageToShow?
           <div className='flex flex-col w-4/5 my-auto  bg-yellow-100 p-5 text-yellow-600 mx-auto rounded-lg h-fit'>
             <span className='flex py-3 items-center gap-4 justify-center text-xl font-semibold border-b-2 border-yellow-600'>

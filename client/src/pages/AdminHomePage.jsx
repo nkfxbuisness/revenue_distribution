@@ -9,7 +9,7 @@ const AdminHomePage = () => {
       <Navbar/>
       <div className='flex relative'>
         <Sidebar/>
-        <div className='mt-12 w-full mr-[280] h-screen bg-blue-50 ' style={{marginRight:280}}>
+        <div className='mt-12 w-full mr-[280] min-h-screen bg-blue-50 ' style={{marginRight:280}}>
           <Outlet/>
         </div>
       </div>

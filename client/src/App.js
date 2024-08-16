@@ -23,6 +23,7 @@ import ProfitUpdate from "./components/adminPage/ProfiltUpdate"
 import UpdateDiposite from "./components/adminPage/UpdateDiposite"
 import CreateAdmin from "./components/adminPage/CreateAdmins"
 import ComissionDistribution from "./components/adminPage/ComissionDistribution"
+import AccountActivationList from './components/adminPage/AccountActivationList';
 
 function App() {
   return (
@@ -47,7 +48,8 @@ function App() {
         </Route>
         <Route path="/admin" Component={AdminHomePage} >
           {/* <Route path="/admin" element={<Navigate to="/admin/accountActivation" />} /> */}
-          <Route path="accountActivation" element={<AccountActivation/>} />
+          <Route path="accountActivation" element={<AccountActivationList/>} />
+          <Route path="accountActivation/:id" element={<AccountActivation/>} />
           <Route path="withdrawRequest" element={<WithdrawlRequest/>} />
           <Route path="profitUpdate" element={<ProfitUpdate/>} />
           <Route path="updateDiposite" element={<UpdateDiposite />} />
