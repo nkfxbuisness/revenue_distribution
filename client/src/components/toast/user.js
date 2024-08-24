@@ -11,7 +11,7 @@ const user = {
     accountNumber:"123456",
     panNo:"12345",
     aadhaarNo:"12345",
-    isActive:true,
+    isActive:false,
     aadhaaarCard:"https://cdrelements.com/wp-content/uploads/2022/04/Menu-Card-Aadhaar-Card-Style-QR-Code-copy.jpg",
     panCard:"https://www.pancardapp.com/blog/wp-content/uploads/2019/04/sample-pan-card.jpg",
     bankPassbook:"https://www.paisabazaar.com/wp-content/uploads/2020/05/SBI-Passbook-1024x463.jpg",

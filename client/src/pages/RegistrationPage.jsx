@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios'
 import Stepper from "../components/auth/Stepper";
 import StepperNavigator from "../components/auth/StepperNavigator";
 import BasicInfo from "../components/auth/steps/BasicInfo";
@@ -52,28 +53,27 @@ const RegistrationPage = () => {
     newStep > 0 && newStep <= steps.length && setCurrentStep(newStep);
   };
 
-  const submit = () => {
+  const submit = async() => {
     if(!userData) {
         showToastMessage("warn","fill the form first !!")
         return;
     }
     let temp =userData;
-    // console.log("hello")
     setFinalData(userData);
-
 
     const fields = [
       "DOB",
-      "IFSC",
-      "PAN",
-      "aadhaar",
-      "bankName",
-      "accountNumber",
+      "IFSCcode",
+      "PANno",
+      "aadhaarNo",
+      "bank",
+      "accountNo",
       "email",
-      "mobile",
+      "mobileNo",
       "password",
+      "confPassword",
       "referral",
-      "userName",
+      "name",
     ];
     console.log(userData)
     // Iterate through the array of fields
@@ -85,9 +85,34 @@ const RegistrationPage = () => {
         return;
       }
     }
-    setIsSubmitted(true)
-    showToastMessage("success", "Registrarion successful !!");
-    console.log("submitted data",temp);
+    if (userData.password !== userData.confPassword) {
+      showToastMessage("warn", "password doesn't match !!");
+      // setLoading(false);
+      return;
+    }
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const  data  = await axios.post(
+        "http://localhost:4000/api/auth/user/signup",
+        userData,
+        config
+      );
+      showToastMessage("success", "Registration Successful !");
+      console.log(data);
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      // setLoading(false);
+      navigate("/auth/login");
+      setIsSubmitted(true)
+    } catch (error) {
+      showToastMessage("error", `${error}`);
+      // setLoading(false);
+    }
+    // showToastMessage("success", "Registrarion successful !!");
+    // console.log("submitted data",temp);
   };
   return (
     <>

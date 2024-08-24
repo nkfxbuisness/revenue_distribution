@@ -30,14 +30,14 @@ const KYCdetails = () => {
     <>
       <div className="flex flex-col gap-4 w-2/3 mx-auto">
         <div className="flex flex-col w-full text-left gap-1">
-          <label htmlFor="PAN" className="font-bold text-lg text-blue-600">
+          <label htmlFor="PANno" className="font-bold text-lg text-blue-600">
             PAN No.
           </label>
           <input
             type="text"
-            id="PAN"
-            name="PAN"
-            value={userData["PAN"] || ""}
+            id="PANno"
+            name="PANno"
+            value={userData["PANno"] || ""}
             onChange={handleChange}
             className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400"
             required
@@ -67,7 +67,7 @@ const KYCdetails = () => {
             {/* {console.log(pan.name)} */}
             <div className="flex w-full rounded-md">
               <label
-                for="PANupload"
+                htmlFor="PANupload"
                 className="w-32 cursor-pointer inline-flex items-center px-4 py-2 bg-blue-600 text-white font-semibold  shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-l-md"
               >
                 Select file
@@ -89,14 +89,14 @@ const KYCdetails = () => {
         </div>
 
         <div className="flex flex-col w-full text-left gap-1">
-          <label htmlFor="aadhaar" className="font-bold text-lg text-blue-600">
+          <label htmlFor="aadhaarNo" className="font-bold text-lg text-blue-600">
             Aadhaar No.
           </label>
           <input
             type="number"
-            id="aadhaar"
-            name="aadhaar"
-            value={userData["aadhaar"] || ""}
+            id="aadhaarNo"
+            name="aadhaarNo"
+            value={userData["aadhaarNo"] || ""}
             onChange={handleChange}
             className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400"
             required

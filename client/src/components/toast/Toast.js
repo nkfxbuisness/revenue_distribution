@@ -1,6 +1,5 @@
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
-
 const showToastMessage = (state,s) => {
     if(state ==='warn'){
       return toast.warn(s, {
