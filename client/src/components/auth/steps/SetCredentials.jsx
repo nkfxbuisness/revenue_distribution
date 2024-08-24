@@ -72,12 +72,14 @@ const SetCredentials = () => {
             htmlFor="confPassword"
             className="font-bold text-lg text-blue-600"
           >
-            {" "}
             Confirm Password
           </label>
           <input
             type="text"
             id="confPassword"
+            name="confPassword"
+            value={userData["confPassword"] || ""}
+            onChange={handleChange}
             className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400"
             required
           />

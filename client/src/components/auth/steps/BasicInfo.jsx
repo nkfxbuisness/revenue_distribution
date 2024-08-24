@@ -19,30 +19,30 @@ const BasicInfo = () => {
       <div className="flex flex-col gap-4 w-2/3 mx-auto">
         {/* name  */}
         <div className="flex flex-col w-full text-left gap-1">
-          <label htmlFor="userName" className="font-bold text-lg text-blue-600">
+          <label htmlFor="name" className="font-bold text-lg text-blue-600">
             Name
           </label>
           <input
             type="text"
-            id="userName"
-            name="userName"
-            value={userData["userName"] || ""}
+            id="name"
+            name="name"
+            value={userData["name"] || ""}
             onChange={handleChange}
             className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400"
             required
           />
         </div>
         
-        {/* mobile  */}
+        {/* mobileNoNo  */}
         <div className="flex flex-col w-full text-left gap-1">
-          <label htmlFor="mobile" className="font-bold text-lg text-blue-600">
+          <label htmlFor="mobileNo" className="font-bold text-lg text-blue-600">
             Mobile No.
           </label>
           <input
             type="number"
-            id="mobile"
-            name="mobile"
-            value={userData["mobile"] || ""}
+            id="mobileNo"
+            name="mobileNo"
+            value={userData["mobileNo"] || ""}
             onChange={handleChange}
             className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400"
           />
