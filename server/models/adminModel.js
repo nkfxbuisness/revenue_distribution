@@ -5,14 +5,14 @@ const adminSchema = new mongoose.Schema({
   name: { type: String, required: true },
   password: { type: String, required: true },
   moblieNo: { type: Number, required: false },
-  email: { type: String, required: false },
+  email: { type: String, required: true },
   roles: {
     type: [String], // Array of strings
     enum: ["accountActivation","withdrawRequest","profitUpdate","updateDiposite","ComissionDistribution","createAdmin","superAdmin"], // Allowed values
     required: true,
   },
   isSuperAdmin: { type: Boolean, required: false },
-});
+},{timestamps:true});
 
 adminSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
