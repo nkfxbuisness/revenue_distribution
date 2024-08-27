@@ -47,7 +47,6 @@ const activateAccount = async (req, res) => {
 
     // Save the updated user document
     await user.save();
-
     res.status(200).json({
       success: false,
       data: user ,// Include the updated user details in the response

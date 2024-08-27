@@ -23,7 +23,7 @@ const AccountActivationList = () => {
       setInactiveUsers(data.data);
       console.log(data.data);
     } catch (error) {
-      showToastMessage("error", `${error}`);
+      showToastMessage("error", `${error.message}`);
       // setLoading(false);
     }
   };
@@ -33,10 +33,13 @@ const AccountActivationList = () => {
 
   return (
     <>
-      <div className="p-5 bg-green-200">
+      <div className="p-5 ">
         <p className="flex justify-center font-semibold text-2xl text-blue-600 pb-5">
           Activate Account
         </p>
+        {inactiveUsers.length===0?<div className="h-96 flex justify-center items-center text-xl font-semibold">
+          No Pending Activation Requests
+        </div>:""}
         <div className="flex flex-col gap-2 w-full">
           {inactiveUsers &&
             inactiveUsers.map((user, index) => (
