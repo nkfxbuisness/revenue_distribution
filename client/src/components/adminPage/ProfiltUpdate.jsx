@@ -1,54 +1,116 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import showToastMessage from "../toast/Toast";
+import AdminContext from "../../context/AdminContext";
+import axios from "axios";
+import getFormattedDate from '../toast/getFormattedDate'
+import { MdInfoOutline } from "react-icons/md";
 
 const ProfiltUpdate = () => {
-  const [role, setRole] = useState("");
+  const [date,setDate]=useState("");
+  const [profit,setProfit]=useState("");
+  const [lastEntry,setlastEntry]=useState("");
+  const [fetchAgain,setFetchAgain]=useState(true)
+  const {token} = useContext(AdminContext);
+  const isEmptyObject = (obj) => {
+    return Object.keys(obj).length === 0;
+  };
+  const submit = async()=>{
+    if(! date || !profit ){
+      showToastMessage("warn","mandatory fields cannot be blank");
+      return;
+    }
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
+        },
+      };
+      const { data } = await axios.post(
+        `http://localhost:4000/api/admin/profitUpdate`,
+        {
+          profit,
+          date
+        },
+        config
+      );
+      setProfit("")
+      setDate("")
+      setFetchAgain(!fetchAgain)
+      if(data.success){
+        showToastMessage("success",data.message)
+      }else{
+        showToastMessage("error",data.message)
+      }
+
+    } catch (error) {
+      showToastMessage("error", `${error}`);
+    }
+  }
+  const fetchLastEntry = async()=>{
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
+        },
+      };
+      const { data } = await axios.get(
+        `http://localhost:4000/api/admin/getLastProfitEntry`,
+        config
+      );
+      if(!isEmptyObject(data.data)){
+        setlastEntry(data.data.date)
+      }
+    } catch (error) {
+      showToastMessage("error", `${error}`);
+    }
+  }
+  useEffect(() => {
+    fetchLastEntry();
+  }, [fetchAgain])
+  
   return (
     <>
-      <div className="w-3/4  h-full flex flex-col mx-auto bg-green-200 ">
-        <p className="flex justify-center font-semibold text-2xl text-blue-600 pb-5">
+      <div className="w-3/4  h-full flex flex-col mx-auto items-center ">
+        <p className="flex justify-center font-semibold text-2xl text-blue-600 py-5">
           Profit Update
         </p>
-        <div className="flex flex-col w-4/5 bg-yellow-200 mx-auto">
-          <div>
-            <div className="flex gap-3">
-              <div className="flex gap-2 items-center p-4 w-full border-2 border-blue-600 text-blue-600 font-semibold rounded">
-                <input
-                  type="radio"
-                  id="profit"
-                  // name="role"
-                  value="profit"
-                  checked={role === "profit"}
-                  onChange={(e) => setRole(e.target.value)}
-                />
-                <label htmlFor="profit" className="cursor-pointer">Profit</label>
-              </div>
-              <div className="flex gap-2 items-center p-4 w-full border-2 border-blue-600 text-blue-600 font-semibold rounded">
-                <input
-                  type="radio"
-                  id="loss"
-                  // name="role"
-                  value="loss"
-                  checked={role === "loss"}
-                  onChange={(e) => setRole(e.target.value)}
-                />
-                <label htmlFor="loss" className="cursor-pointer">Loss</label>
-              </div>
-            </div>
+        <p className="flex w-4/5 justify-center items-center font-light text-xl text-yellow-600 bg-yellow-200 rounded-md p-2 mb-5 gap-2">
+          <MdInfoOutline className="font-semibold "/>
+          Last Profit updated for {getFormattedDate(lastEntry)}
+        </p>
+        <div className="flex flex-col w-4/5 mx-auto ">
+          <div className="flex flex-col w-full py-2">
+            <label
+              htmlFor="date"
+              className="font-bold text-lg text-blue-600 py-2 text-left"
+            >
+              Date
+            </label>
+            <input type="date" id="date" value={date} onChange={(e)=>setDate(e.target.value)} className="py-1 rounded-md w-full" />
           </div>
-          <label
-            htmlFor="withdrawlAmount"
-            className="font-bold text-lg text-blue-600 py-2 text-left"
-          >
-            Profit / Loss in percentage
-          </label>
+          <div className="flex flex-col w-full py-2 text-left">
+            <label
+              htmlFor="profitUpdate"
+              className="font-bold text-lg text-blue-600 py-1 text-left"
+            >
+              Profit / Loss in percentage
+            </label>
+            <p className="text-yellow-600 text-sm font-light pb-1 ">Enter the profit or loss amount for the minimum investable amount. If it is a loss, use a negative sign</p>
 
-          <input
-            type="number"
-            id="profitUpdate"
-            name="profitUpdate"
-            placeholder="Enter % profit / loss"
-            className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400 w-full"
-          />
+            <input
+              type="number"
+              id="profitUpdate"
+              value={profit}
+              onChange={(e)=>setProfit(e.target.value)}
+              placeholder="Enter % profit / loss"
+              className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400 w-full"
+            />
+          </div>
+          <button className="p-2 bg-blue-600 text-white font-semibold mt-3 rounded-md w-fit" onClick={submit}>
+            Update Profit
+          </button>
         </div>
       </div>
     </>
