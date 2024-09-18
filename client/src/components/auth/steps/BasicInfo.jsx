@@ -7,7 +7,7 @@ import showToastMessage from "../../toast/Toast";
 
 const BasicInfo = () => {
   const [show, setShow] = useState(false);
-  const {userData,setUserData,finalData,setFinalData}=useContext(StepperContext);
+  const {userData,setUserData,finalData,setFinalData,errors}=useContext(StepperContext);
 
   const handleChange = (e)=>{
     const {name,value}=e.target;
@@ -31,6 +31,7 @@ const BasicInfo = () => {
             className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400"
             required
           />
+          {errors.name && <p className="text-red-600 text-sm font-thin">{errors.name}</p>}
         </div>
         
         {/* mobileNoNo  */}
@@ -46,6 +47,7 @@ const BasicInfo = () => {
             onChange={handleChange}
             className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400"
           />
+          {errors.mobileNo && <p className="text-red-600 text-sm font-thin">{errors.mobileNo}</p>}
         </div>
         {/* DOB  */}
         <div className="flex flex-col w-full text-left gap-1">
@@ -60,6 +62,7 @@ const BasicInfo = () => {
             onChange={handleChange}
             className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400"
           />
+          {errors.DOB && <p className="text-red-600 text-sm font-thin">{errors.DOB}</p>}
         </div>
 
         {/* address  */}
@@ -74,8 +77,8 @@ const BasicInfo = () => {
             value={userData["address"] || ""}
             onChange={handleChange}
           />
+          {errors.address && <p className="text-red-600 text-sm font-thin">{errors.address}</p>}
         </div>
-        
       </div>
     </>
   );

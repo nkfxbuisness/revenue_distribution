@@ -9,6 +9,9 @@ const {
   changeAccessablity,
   profitUpdate,
   getLastProfitEntry,
+  getAllWithdrawalRequests,
+  downloadInCSVformat,
+  updatePaidStatus,
 } = require("../controllers/adminControllers");
 const { authenticate, authorizeRoles } = require("../middleware/accessablityMidddleWare");
 const Router = express.Router();
@@ -22,5 +25,8 @@ Router.put("/changeAccessablity/:id",authenticate, authorizeRoles(['superAdmin']
 Router.delete("/deleteAdmin/:id",authenticate, authorizeRoles(['superAdmin']),  deleteAdmin);
 Router.get("/getLastProfitEntry",authenticate, authorizeRoles(['superAdmin']),  getLastProfitEntry);
 Router.post("/profitUpdate",authenticate, authorizeRoles(['superAdmin']),  profitUpdate);
+Router.get("/getAllWithdrawalRequests",authenticate, authorizeRoles(['superAdmin']),getAllWithdrawalRequests  );
+Router.post("/download-pending-requests",authenticate, authorizeRoles(['superAdmin']),downloadInCSVformat  );
+Router.put("/update-paid-status",authenticate, authorizeRoles(['superAdmin']),updatePaidStatus  );
 
 module.exports = Router;

@@ -7,6 +7,7 @@ import { RiTeamLine } from "react-icons/ri";
 import { BiLogOut } from "react-icons/bi";
 import { GrValidate } from "react-icons/gr";
 import { MdOutlineManageAccounts } from "react-icons/md";
+import { AiOutlineDollar } from "react-icons/ai";
 import UserContext from "../../context/UserContext";
 // import
 
@@ -54,10 +55,16 @@ const Sidebar = () => {
       isActive: currentPath.includes("referral"),
     },
     {
-      name: "Genealogy",
-      route: `team/${user?._id}`,
+      name: "Total Business",
+      route: `totalBusiness/${user?._id}`,
+      icon: <AiOutlineDollar />,
+      isActive: currentPath.includes("totalBusiness"),
+    },
+    {
+      name: "Team Business",
+      route: `teamBusiness/${user?._id}`,
       icon: <RiTeamLine />,
-      isActive: currentPath.includes("team"),
+      isActive: currentPath.includes("teamBusiness"),
     },
     // {
     //   name: "Logout",

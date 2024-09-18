@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
     mobileNo:{type:Number,required :true},
     DOB:{type:Date,required :true},
     address:{type:String,required:true},
-    accountNo:{type:Number,required:true},
+    accountNo:{type:String,required:true},
     IFSCcode:{type:String,required:true},
     bank:{type:String,required:true},
     PANno:{type:String,required:true},
@@ -38,6 +38,8 @@ const userSchema = new mongoose.Schema({
     regFeesTransactionId:{type:String,required:false},
     regFeesPaymentDate:{type:Date,required:false},
     depositData:[depositSchema],
+    withdrawalRequests:[{type:mongoose.Schema.Types.ObjectId,ref:"WithdrawalRequest"}],
+    withdrawalRequestSubmitted:{type:Boolean,default:false},
     role:{type:String , default:"user"}
     },
     { timestamps: true }

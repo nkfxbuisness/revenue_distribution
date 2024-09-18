@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
-const bcrypt = require('bcryptjs')
+const bcrypt = require("bcryptjs");
+const WithdrawalRequest = require("../models/withdrawalRequestModel");
 
 /**
  * Route     /api/user/activateAccount/:id
@@ -49,7 +50,7 @@ const activateAccount = async (req, res) => {
     await user.save();
     res.status(200).json({
       success: false,
-      data: user ,// Include the updated user details in the response
+      data: user, // Include the updated user details in the response
       message:
         "User activation request submitted and deposit data updated successfully",
     });
@@ -79,31 +80,109 @@ const reActiveAccount = async (req, res) => {
           regFeesReciptUrl,
           regFeesTransactionId,
           octaRequestNo,
-          activationRequestRejected:false,
-          activationRejectionRemarks:"",
-          activationRequestSubmitted:true
+          activationRequestRejected: false,
+          activationRejectionRemarks: "",
+          activationRequestSubmitted: true,
         },
       },
-      { new: true, runValidators: true } 
+      { new: true, runValidators: true }
     );
 
     if (!updatedUser) {
-      return res.status(404).json({ success: false, message: 'User not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     // Successfully updated
     res.status(200).json({
       success: true,
-      message: 'User fields updated successfully',
+      message: "User fields updated successfully",
       data: updatedUser,
     });
   } catch (error) {
-    console.error('Error updating user:', error);
-    res.status(500).json({ success: false, message: 'Server error' });
+    console.error("Error updating user:", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
+/**
+ * Route     /api/user/withdrawalRequest/:id
+ * Des       send a new withdrawl request
+ * Params    id
+ * Access    Protected
+ * Method    post
+ */
+const postWithdrawalRequest = async (req, res) => {
+  const { amount } = req.body;
+  const { id } = req.params;
+  const walletBalance = 300;
 
+  // Validate request
+  if (!amount || !id) {
+    return res.json({
+      success: false,
+      message: "User ID or amount not provided",
+      data: {},
+    });
+  }
+  if (amount > walletBalance) {
+    return res.json({
+      success: false,
+      message: "Entered amount exceeded wallet balance",
+      data: {},
+    });
+  }
+
+  try {
+    // Find user by ID
+    const user = await User.findById(id);
+    if (!user) {
+      return res.json({
+        success: false,
+        message: "User with this ID not found!",
+        data: {},
+      });
+    }
+    console.log(user.name)
+
+    // Check if a withdrawal request is already submitted
+    if (user.withdrawalRequestSubmitted) {
+      return res.json({
+        success: false,
+        message: "Withdrawal request already submitted!",
+        data: {},
+      });
+    }
+
+    // Create withdrawal request
+    const withdrawalRequest = await WithdrawalRequest.create({
+      user: id,
+      amount: amount,
+      date: Date.now(),
+    });
+    console.log(withdrawalRequest)
+
+    
+    user.withdrawalRequestSubmitted = true;
+    user.withdrawalRequests.push(withdrawalRequest._id)
+    const updateResult = await user.save();
+    console.log(updateResult)
+    
+
+    return res.status(200).json({
+      success: true,
+      message: "Withdrawal request submitted successfully!",
+      data: withdrawalRequest,
+      updateResult:updateResult,
+      // user:upda
+    });
+
+  } catch (error) {
+    console.error("Error submitting withdrawal request:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
 
 /**
  * Route     /api/user/changePassword/:id
@@ -113,7 +192,7 @@ const reActiveAccount = async (req, res) => {
  * Method    POST
  */
 const changePassword = async (req, res) => {
-  const {id}=req.params;
+  const { id } = req.params;
   const { currentPassword, newPassword } = req.body;
 
   // Find the authenticated user
@@ -128,17 +207,17 @@ const changePassword = async (req, res) => {
   //     });
   //   }
 
-    // Hash the new password
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(newPassword, salt);
+  // Hash the new password
+  const salt = await bcrypt.genSalt(10);
+  user.password = await bcrypt.hash(newPassword, salt);
 
-    // Save the updated user
-    await user.save();
+  // Save the updated user
+  await user.save();
 
-    res.json({ message: "Password updated successfully" })
+  res.json({ message: "Password updated successfully" });
   // } else {
-     return res.status(401).json({ message: "Current password incorrect" });
+  return res.status(401).json({ message: "Current password incorrect" });
   // }
 };
 
-module.exports = { activateAccount ,reActiveAccount, changePassword};
+module.exports = { activateAccount, reActiveAccount,postWithdrawalRequest, changePassword };

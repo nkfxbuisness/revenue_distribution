@@ -1,6 +1,6 @@
 const User = require("../models/userModel");
-const generateToken = require('../config/generateToken')
-const generateReferralCode = require('../config/generateReferralCode');
+const generateToken = require('../config/token/generateToken')
+const generateReferralCode = require('../config/referral/generateReferralCode');
 const Admin = require("../models/adminModel");
 
 /**
@@ -67,12 +67,9 @@ const userSignup = async (req, res) => {
     IFSCcode,
     bank,
     PANno,
-    PANcardUrl,
     aadhaarNo,
-    aadhaarCardUrl,
     password,
     confPassword,
-    referral
   } = req.body;
 
   if (
@@ -86,9 +83,7 @@ const userSignup = async (req, res) => {
     !bank ||
     !PANno ||
     !aadhaarNo ||
-    !password ||
-    !confPassword ||
-    !referral
+    !password
   ) {
     return res.status(400).json({
       success: false,
@@ -103,14 +98,6 @@ const userSignup = async (req, res) => {
     });
   }
 
-  const parent = await User.findOne({referralCode:referral});
-  if(!parent){
-    return res.status(400).json({
-      success:false,
-      message:"Invalid referral code !!"
-    })
-  }
-  console.log("parent",parent)
  
   const referralCode = await generateReferralCode(name.split(' ')[0])
 
@@ -132,21 +119,19 @@ const userSignup = async (req, res) => {
     IFSCcode,
     bank,
     PANno,
-    PANcardUrl,
     aadhaarNo,
-    aadhaarCardUrl,
     password,
     referralCode:referralCode,
-    parent:parent
+    // parent:parent
   });
   console.log("newUser",newUser);
 
   // If a referring user was found, update their child field
-  if (parent) {
-    parent.child.push(newUser._id);
-    await parent.save();
-  }
-  console.log("updatedParent",parent);
+  // if (parent) {
+  //   parent.child.push(newUser._id);
+  //   await parent.save();
+  // }
+  // console.log("updatedParent",parent);
   
 
   if (newUser) {

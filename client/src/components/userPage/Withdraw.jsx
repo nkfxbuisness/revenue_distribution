@@ -1,14 +1,44 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import { AiOutlineDollarCircle } from "react-icons/ai";
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react'
 import { IoIosArrowUp } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
+import UserContext from '../../context/UserContext';
+import showToastMessage from '../toast/Toast';
+import axios from 'axios';
 
 const Withdraw = () => {
-  
+  const {user,token} = useContext(UserContext);
   const [disclosure,setDisclosure]=useState(false);
+  const [amount,setAmount]= useState("");
   const [withdrawlSectionActive,setWithdrawlSectionActive]=useState(true);
+  const submit = async()=>{
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          "Authorization": `Bearer ${token}`, // Include the JWT token in the Authorization header
+        },
+      };
+      const { data } = await axios.post(
+        `http://localhost:4000/api/user/withdrawalRequest/${user._id}`,
+        {
+          amount
+        },
+        config
+      );
+      if(data.success){
+        console.log(data.data);
+        showToastMessage("success",data.message);
+        return
+      }
+      showToastMessage("error",data.message);
+
+    } catch (error) {
+      showToastMessage("error", `${error}`);
+    }
+  }
 
   return (
     <>
@@ -59,16 +89,15 @@ const Withdraw = () => {
               <input
                 type="number"
                 id="withdrawlAmount"
-                name="withdrawlAmount"
                 placeholder='Enter amount you want to withdraw'
-                // value={userData["mobile"] || ""}
-                // onChange={handleChange}
+                value={amount}
+                onChange={(e)=>setAmount(e.target.value)}
                 // disabled
                 className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400 w-full"
               />
             </div>
-            <span className='text-blue-600 font-thin text-xs text-left'>Entered amount must be in US Dollars</span>
-            <button className='p-2 bg-blue-600 text-white text-sm font-semibold w-fit mt-3 rounded-md'>Send Withdrawl Request</button>
+            <span className='text-blue-600 font-thin text-xs text-left'>Entered amount is in US Dollars</span>
+            <button className='p-2 bg-blue-600 text-white text-sm font-semibold w-fit mt-3 rounded-md' onClick={submit}>Send Withdrawl Request</button>
           </div>
         </div>}
         

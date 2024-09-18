@@ -28,6 +28,10 @@ import LoginPage from "./pages/LoginPage";
 import AdminLogin from "./pages/AdminLogin";
 import UserContext, { checkTokenExpiration } from "./context/UserContext";
 import { AdminProvider } from "./context/AdminContext";
+import TotalBusiness from "./components/userPage/TotalBusiness";
+import TeamBuisness from "./components/userPage/TeamBuisness";
+import PostAnnouncement from "./components/adminPage/PostAnnouncement";
+import Temp from "./components/auth/Temp";
 
 function App() {
   const { user, setUser, token, setToken } = useContext(UserContext);
@@ -39,6 +43,7 @@ function App() {
         {/* <Route path="/" Component={UserHomePage} /> */}
         <Route path="/auth/register" Component={RegistrationPage} />
         <Route path="/auth/login" Component={LoginPage} />
+        <Route path="/auth/temp" Component={Temp} />
         <Route path="/user" element={<UserHomePage />}>
           {user && user.active ? (
             <Route
@@ -59,6 +64,8 @@ function App() {
           <Route path="referral/:id" element={<Referral />} />
           <Route path="team/:id" element={<Teams />} />
           <Route path="activeAccount/:id" element={<ActiveAccount />} />
+          <Route path="totalBusiness/:id" element={<TotalBusiness />} />
+          <Route path="teamBusiness/:id" element={<TeamBuisness />} />
         </Route>
 
         {/* Admin routes  */}
@@ -78,6 +85,7 @@ function App() {
           <Route path="profitUpdate" element={<ProfitUpdate />} />
           <Route path="updateDiposite" element={<UpdateDiposite />} />
           <Route path="createAdmin" element={<CreateAdmin />} />
+          <Route path="postAnnouncement" element={<PostAnnouncement />} />
           <Route
             path="ComissionDistribution"
             element={<ComissionDistribution />}

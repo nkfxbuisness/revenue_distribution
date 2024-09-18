@@ -5,7 +5,7 @@ const cors = require('cors')
 
 
 // import files 
-const connectDB = require('./config/DBconnection');
+const connectDB = require('./config/db/DBconnection');
 
 // import routes 
 const userRoures = require('./routes/userRoutes')
