@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios'
+import axios from "axios";
 import Stepper from "../components/auth/Stepper";
 import StepperNavigator from "../components/auth/StepperNavigator";
 import BasicInfo from "../components/auth/steps/BasicInfo";
@@ -10,18 +10,30 @@ import KYCdetails from "../components/auth/steps/KYCdetails";
 // import Referral from "../components/auth/steps/";
 import { StepperContext } from "../context/StepperContext";
 import showToastMessage from "../components/toast/Toast";
-import successVideo from "../components/images/success.mp4"
+import successVideo from "../components/images/success.mp4";
 import { MdOutlineLogin } from "react-icons/md";
+import userSchema, { warn } from "../data_validation/signupFormValidation";
 
 const RegistrationPage = () => {
-    let navigate = useNavigate();
+  let navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [userData, setUserData] = useState("");
   const [finalData, setFinalData] = useState([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const toLoginPage=()=>{
-    navigate("/login")
-  }
+  const toLoginPage = () => {
+    navigate("/login");
+  };
+
+  const [referralCode, setReferralCode] = useState("");
+  const [referralCodeField, setReferralCodeField] = useState(false);
+  const [referralCodeStatus, setReferralCodeStatus] = useState("");
+  const [OTPfield, setOTPfield] = useState(false);
+  const [enterOTP, setEnterOTP] = useState("");
+  const [OTPverified, setOTPVerified] = useState({
+    success:false,
+    message:""
+  });
+  const [submitAllowed, setSubmitAllowed] = useState(false);
 
   const steps = [
     "Set your credentials",
@@ -30,7 +42,7 @@ const RegistrationPage = () => {
     "KYC Details",
   ];
 
-//   console.log(steps);
+  //   console.log(steps);
 
   const displayStep = (step) => {
     switch (step) {
@@ -53,66 +65,68 @@ const RegistrationPage = () => {
     newStep > 0 && newStep <= steps.length && setCurrentStep(newStep);
   };
 
-  const submit = async() => {
-    if(!userData) {
-        showToastMessage("warn","fill the form first !!")
-        return;
-    }
-    let temp =userData;
-    setFinalData(userData);
+  const [errors, setErrors] = useState({});
 
-    const fields = [
-      "DOB",
-      "IFSCcode",
-      "PANno",
-      "aadhaarNo",
-      "bank",
-      "accountNo",
-      "email",
-      "mobileNo",
-      "password",
-      "confPassword",
-      "referral",
-      "name",
-    ];
+  const submit = async (e) => {
+    console.log("hello submit");
     console.log(userData)
-    // Iterate through the array of fields
-    for (let field of fields) {
-        // console.log(temp[field])
-      if (!temp[field] || temp[field]==="") {
-        console.log(`no ${field}`);
-        showToastMessage("error", `${field} not provided`);
-        return;
-      }
-    }
-    if (userData.password !== userData.confPassword) {
-      showToastMessage("warn", "password doesn't match !!");
-      // setLoading(false);
+    
+    // e.preventDefault();
+    if (!userData) {
+      showToastMessage("warn", "fill the form first !!");
       return;
     }
+    const { error } = userSchema.validate(userData, { abortEarly: false });
+    if (error) {
+      const errorMessages = error.details.reduce((acc, curr) => {
+        acc[curr.path[0]] = curr.message;
+        return acc;
+      }, {});
+      setErrors(errorMessages);
+      return;
+    }
+    console.log("userData",userData)
+    console.log("errors",errors)
+    console.log("OTPfield",OTPverified)
+    console.log("referral",referralCodeField)
+    if(!referralCodeField){
+      console.log("referral code not verified !");
+      
+      showToastMessage("warn","Referral Code must be verified before proceeding farther !!");
+      return;
+    }
+    if(!OTPverified.success){
+      console.log("email code not verified !");
+      showToastMessage("warn","email must be verified before proceeding farther !!");
+      return;
+    }
+
+    setFinalData(userData);
+
+    
     try {
+      console.log("try");
+      
       const config = {
         headers: {
           "Content-type": "application/json",
         },
       };
-      const  data  = await axios.post(
+      const data = await axios.post(
         "http://localhost:4000/api/auth/user/signup",
-        userData,
+        finalData,
         config
       );
-      showToastMessage("success", "Registration Successful !");
       console.log(data);
+      showToastMessage("success", "Registration Successful !");
       localStorage.setItem("userInfo", JSON.stringify(data));
       // setLoading(false);
       navigate("/auth/login");
-      setIsSubmitted(true)
+      setIsSubmitted(true);
     } catch (error) {
       showToastMessage("error", `${error}`);
       // setLoading(false);
     }
-    // showToastMessage("success", "Registrarion successful !!");
-    // console.log("submitted data",temp);
   };
   return (
     <>
@@ -133,7 +147,9 @@ const RegistrationPage = () => {
                 src="https://www.freeiconspng.com/thumbs/success-icon/success-icon-10.png"
                 alt=""
               />
-              <p className="text-green-400 text-2xl font-semibold py-5">Registration done ! Proceed to login</p>
+              <p className="text-green-400 text-2xl font-semibold py-5">
+                Registration done ! Proceed to login
+              </p>
             </div>
           ) : (
             <div className="my-10 p-10 h-96 overflow-y-auto">
@@ -143,6 +159,21 @@ const RegistrationPage = () => {
                   setUserData,
                   finalData,
                   setFinalData,
+                  referralCode,
+                  setReferralCode,
+                  referralCodeField,
+                  setReferralCodeField,
+                  referralCodeStatus,
+                  setReferralCodeStatus,
+                  OTPfield,
+                  setOTPfield,
+                  enterOTP,
+                  setEnterOTP,
+                  OTPverified,
+                  setOTPVerified,
+                  errors,
+                  submitAllowed,
+                  setSubmitAllowed
                 }}
               >
                 {/* {console.log(userData)} */}
@@ -168,6 +199,8 @@ const RegistrationPage = () => {
               currentStep={currentStep}
               submit={submit}
               isSubmitted={isSubmitted}
+              submitAllowed={submitAllowed}
+              setSubmitAllowed={setSubmitAllowed}
             />
           )}
         </div>

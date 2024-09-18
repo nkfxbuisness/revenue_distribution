@@ -1,7 +1,19 @@
-const {compareDates, hasDateExceededToday} = require("../config/compareDates");
+const {
+  compareDates,
+  hasDateExceededToday,
+} = require("../config/dates/compareDates");
+const fs = require("fs");
+const moment = require("moment");
+const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 const Admin = require("../models/adminModel");
 const Profit = require("../models/profitModel");
 const User = require("../models/userModel");
+const WithdrawalRequest = require("../models/withdrawalRequestModel");
+
+// Utility function to format the date
+function getFormattedDate(date) {
+  return moment(date).format("YYYY-MM-DD"); // Format as desired
+}
 
 /**
  * Route     /api/admin/accountActivation
@@ -100,7 +112,7 @@ const activationRequestRejectById = async (req, res) => {
 
 const createAdmin = async (req, res) => {
   const { name, password, mobileNo, email, roles } = req.body;
-  if ((!name || !password || !roles || !email)) {
+  if (!name || !password || !roles || !email) {
     return res.status(400).json({
       success: false,
       message: "mandatory fields not provided !!",
@@ -120,13 +132,11 @@ const createAdmin = async (req, res) => {
     // Saving the new admin to the database
     await newAdmin.save();
 
-    res
-      .status(201)
-      .json({
-        success: true,
-        message: "Admin created successfully",
-        data: newAdmin,
-      });
+    res.status(201).json({
+      success: true,
+      message: "Admin created successfully",
+      data: newAdmin,
+    });
   } catch (error) {
     console.error("Error creating admin:", error);
     res.status(500).json({ message: "Error creating admin", error });
@@ -140,19 +150,19 @@ const createAdmin = async (req, res) => {
  * Access    private
  * Method    get
  */
-const getAllAdmins = async(req,res)=>{
+const getAllAdmins = async (req, res) => {
   try {
-    const admins = await Admin.find({isSuperAdmin:false});
+    const admins = await Admin.find({ isSuperAdmin: false });
     return res.status(200).json({
-      success:true,
-      message:"all admins except superadmin",
-      data:admins
-    })
+      success: true,
+      message: "all admins except superadmin",
+      data: admins,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
-}
+};
 
 /**
  * Route     /api/admin/changeAccessablity/:id
@@ -162,31 +172,31 @@ const getAllAdmins = async(req,res)=>{
  * Method    put
  */
 
-const changeAccessablity = async(req,res)=>{
-  const {id} = req.params;
-  const {roles} = req.body ;
+const changeAccessablity = async (req, res) => {
+  const { id } = req.params;
+  const { roles } = req.body;
   try {
     const updatedAdmin = await Admin.findByIdAndUpdate(
       id,
-      { $set: { roles : roles } },
+      { $set: { roles: roles } },
       { new: true, runValidators: true }
-    )
-    if(!updatedAdmin){
+    );
+    if (!updatedAdmin) {
       return res.status(400).json({
-        success:false,
-        message:"Failed to update admin accessiblity"
-      })
+        success: false,
+        message: "Failed to update admin accessiblity",
+      });
     }
     return res.status(200).json({
-      success:true,
-      message:`accessiblity updated for ${updatedAdmin.name}`,
-      data:updatedAdmin
-    })
+      success: true,
+      message: `accessiblity updated for ${updatedAdmin.name}`,
+      data: updatedAdmin,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
-}
+};
 
 /**
  * Route     /api/admin/deleteAdmin/:id
@@ -196,20 +206,25 @@ const changeAccessablity = async(req,res)=>{
  * Method    delete
  */
 
-const deleteAdmin = async(req,res)=>{
+const deleteAdmin = async (req, res) => {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
     const deletedAdmin = await Admin.findByIdAndDelete(id);
 
     if (!deletedAdmin) {
-      return res.status(404).json({success:false, message: 'Admin not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: "Admin not found" });
     }
 
-    res.status(200).json({ success:true , message: `Admin ${deleteAdmin.name} deleted successfully`, });
+    res.status(200).json({
+      success: true,
+      message: `Admin ${deleteAdmin.name} deleted successfully`,
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
-}
+};
 
 /**
  * Route     /api/admin/getLastProfitEntry
@@ -219,26 +234,26 @@ const deleteAdmin = async(req,res)=>{
  * Method    get
  */
 
-const getLastProfitEntry = async(req,res)=>{
+const getLastProfitEntry = async (req, res) => {
   try {
     const lastEntry = await Profit.findOne().sort({ createdAt: -1 });
     // console.log(lastEntry);
-    if(!lastEntry){
+    if (!lastEntry) {
       return res.status(400).json({
-        success:false,
-        message:"last entry not found",
-        data:{}
-      })
+        success: false,
+        message: "last entry not found",
+        data: {},
+      });
     }
     return res.status(200).json({
-      success:true,
-      message:`the last entry is on ${lastEntry.date}`,
-      data:lastEntry
-    })
+      success: true,
+      message: `the last entry is on ${lastEntry.date}`,
+      data: lastEntry,
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
-}
+};
 
 /**
  * Route     /api/admin/profitUpdate
@@ -248,67 +263,193 @@ const getLastProfitEntry = async(req,res)=>{
  * Method    post
  */
 
-const profitUpdate = async(req,res)=>{
-  const {date,profit} = req.body;
+const profitUpdate = async (req, res) => {
+  const { date, profit } = req.body;
   console.log(date);
-  
+
   if (!date || !profit) {
     return res.status(400).json({
       success: false,
-      message: 'Date and profit are required.',
+      message: "Date and profit are required.",
       data: {},
     });
   }
-  if(hasDateExceededToday(date)){
+  if (hasDateExceededToday(date)) {
     return res.json({
-      success:false,
-      message:"profit cannot be updated for day after today   !"
-    })
+      success: false,
+      message: "profit cannot be updated for day after today   !",
+    });
   }
   try {
     const lastEntry = await Profit.findOne().sort({ createdAt: -1 });
     // console.log(lastEntry);
 
-    if(!lastEntry){
-      
+    if (!lastEntry) {
       const todaysProfit = await Profit.create({
-        masterProfit:profit,
-        date:date
-      })
+        masterProfit: profit,
+        date: date,
+      });
       console.log(todaysProfit);
-      
+
       return res.status(200).json({
-        success:true,
-        message:`profit updated for ${date}`,
-        data:todaysProfit
-      })
-    }else if(!compareDates(date,lastEntry.date)){
+        success: true,
+        message: `profit updated for ${date}`,
+        data: todaysProfit,
+      });
+    } else if (!compareDates(date, lastEntry.date)) {
       const todaysProfit = await Profit.create({
-        masterProfit:profit,
-        date:date
-      })
+        masterProfit: profit,
+        date: date,
+      });
       console.log(todaysProfit);
-      
+
       return res.status(200).json({
-        success:true,
-        message:`profit updated for ${date}`,
-        data:todaysProfit
-      })
-    }
-    else if(compareDates(date,lastEntry.date)){
+        success: true,
+        message: `profit updated for ${date}`,
+        data: todaysProfit,
+      });
+    } else if (compareDates(date, lastEntry.date)) {
       console.log("case 3");
-      
+
       return res.status(200).json({
-        success:false,
-        message:`profit already been updated for ${date}`,
-        data:{}
-      })
+        success: false,
+        message: `profit already been updated for ${date}`,
+        data: {},
+      });
     }
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
-}
+};
 
+/**
+ * Route     /api/admin/getAllWithdrawalRequests
+ * Des       get All Withdrawal Requests that are not paid yet
+ * Params    none
+ * Access    private
+ * Method    get
+ */
+
+const getAllWithdrawalRequests = async (req, res) => {
+  try {
+    const requests = await WithdrawalRequest.find({ paid: false }).populate(
+      "user",
+      "name mobileNo accountNo IFSCcode bank"
+    );
+    return res.status(200).json({
+      success: true,
+      message: "all withdrawal requests featched successfully",
+      data: requests,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+/**
+ * Route     /api/admin/download-pending-requests
+ * Des       download all pending requests in CSV format
+ * Params    none
+ * Access    private
+ * Method    post
+ */
+
+const downloadInCSVformat = async (req, res) => {
+  try {
+    // Get pendingRequests data from the request body
+    const { pendingRequests } = req.body;
+
+    if (!pendingRequests || !pendingRequests.length) {
+      return res.json({
+        success: false,
+        message: "No pending requests provided",
+      });
+    }
+
+    // Define the path and filename for the CSV
+    const filePath = "pending_requests.csv";
+
+    // Prepare data for CSV
+    const csvData = pendingRequests.map((request, index) => ({
+      No: index + 1,
+      Name: request.user.name,
+      "Account Number": `="${request.user.accountNo}"`, // Format account number to avoid scientific notation
+      "IFSC Code": request.user.IFSCcode,
+      Bank: request.user.bank,
+      Date: getFormattedDate(request.date),
+      Amount: request.amount,
+    }));
+
+    // Define the structure of the CSV
+    const csvWriter = createCsvWriter({
+      path: filePath,
+      header: [
+        { id: "No", title: "No." },
+        { id: "Name", title: "Name" },
+        { id: "Account Number", title: "Account Number" },
+        { id: "IFSC Code", title: "IFSC Code" },
+        { id: "Bank", title: "Bank" },
+        { id: "Date", title: "Date" },
+        { id: "Amount", title: "Amount" },
+      ],
+      alwaysQuote: false, // Ensure fields are not always quoted
+    });
+
+    // Write data to CSV
+    await csvWriter.writeRecords(csvData);
+
+    // Set headers for the response to prompt a download
+    res.setHeader("Content-Type", "text/csv");
+    res.setHeader("Content-Disposition", `attachment; filename="${filePath}"`);
+
+    // Stream the file to the response
+    fs.createReadStream(filePath).pipe(res);
+  } catch (error) {
+    console.error("Error generating CSV file:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+/**
+ * Route     /api/admin/update-paid-status
+ * Des       update as paid to all pending requests 
+ * Params    none
+ * Access    private
+ * Method    put
+ */
+
+const updatePaidStatus = async (req, res) => {
+  const { ids } = req.body; // Get the array of IDs from the request body
+
+  if (!ids || !Array.isArray(ids) || ids.length === 0) {
+    return res
+      .status(400)
+      .json({
+        success: false,
+        message: "No IDs provided or invalid data format",
+      });
+  }
+
+  try {
+    // Update all documents that match the IDs in the array
+    const result = await WithdrawalRequest.updateMany(
+      { _id: { $in: ids } }, // Match documents with IDs in the provided array
+      { $set: { paid: true } } // Update the 'paid' field to 'true'
+    );
+
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: `Successfully updated ${result.modifiedCount} documents.`,
+      });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Error updating documents", details: error.message });
+  }
+};
 
 module.exports = {
   accountActivation,
@@ -319,5 +460,8 @@ module.exports = {
   changeAccessablity,
   deleteAdmin,
   getLastProfitEntry,
-  profitUpdate
+  profitUpdate,
+  getAllWithdrawalRequests,
+  downloadInCSVformat,
+  updatePaidStatus
 };

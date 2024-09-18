@@ -7,6 +7,8 @@ const StepperNavigator = ({
   currentStep,
   submit,
   isSubmitted,
+  submitAllowed,
+  setSubmitAllowed
 }) => {
   return (
     <>
@@ -23,8 +25,8 @@ const StepperNavigator = ({
 
         {currentStep === steps.length ? (
           <button
-            onClick={submit}
-            className="flex items-center gap-3 px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:opacity-80 transition duration-300 ease-in-out "
+            onClick={(e)=>submit(e)}
+            className={`flex items-center gap-3 px-4 py-2 bg-blue-600 ${submitAllowed?"":"opacity-50 cursor-not-allowed"}  text-white font-semibold rounded-md  transition duration-300 ease-in-out`}  disabled={!submitAllowed}
           >
             Submit
             <HiArrowSmallRight className="text-2xl" />

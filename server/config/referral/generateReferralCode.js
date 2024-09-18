@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 // Import your User model
-const User = require('../models/userModel'); 
+const User = require('../../models/userModel'); 
 
 // Function to generate a random 6-character alphanumeric string
 const generateRandomString = (length) => {
