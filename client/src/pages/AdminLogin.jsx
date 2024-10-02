@@ -67,7 +67,7 @@ const AdminLogin = () => {
               name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400"
+              className="w-full text-black py-1 px-2 rounded-md shadow-md outline-none focus:outline-blue-400"
             />
           </div>
 
@@ -86,11 +86,11 @@ const AdminLogin = () => {
                 name="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400 w-full"
+                className=" text-black py-1 px-2 rounded-md shadow-md outline-none focus:outline-blue-400 w-full"
                 required
               />
               <div
-                className="flex justify-center items-center py-1 rounded-md w-20 h-full bg-blue-600 text-white cursor-pointer "
+                className="flex justify-center items-center py-1 rounded-md w-20 h-full bg-blue-600 text-white cursor-pointer shadow-md"
                 onClick={() => setShow(!show)}
               >
                 {show ? (

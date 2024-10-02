@@ -20,23 +20,32 @@ const Navbar = () => {
   };
   return (
     <>
-      <div className="flex w-full justify-between px-10 py-2 bg-white text-blue-800 items-center fixed top-0 z-30">
+      <div className="flex w-full justify-between px-10 py-2 bg-white text-blue-800 items-center fixed top-0 z-30 shadow-md">
         <div className="flex gap-2 items-center">
           <BsGraphUpArrow className="text-2xl text-blue-800" />
           <p className="text-2xl font-bold">Revenue Distribution</p>
         </div>
 
         <div className="flex  gap-5 items-center justify-between">
-          {user && user.active ? (
-            <div className="flex gap-2 justify-start items-center px-5">
-              <FaCircleDot className="text-green-400 text-2xl" />
-              <p className="text-lg font-semibold">Active</p>
-            </div>
-          ) : (
+          {user && user.activationStatus.suspended ? (
             <div className="flex gap-2 justify-start items-center px-5">
               <FaCircleDot className="text-red-600 text-2xl" />
-              <p className="text-lg font-semibold">Inactive</p>
+              <p className="text-lg font-semibold">Suspended</p>
             </div>
+          ) : (
+            <>
+              {user && user.activationStatus.active ? (
+                <div className="flex gap-2 justify-start items-center px-5">
+                  <FaCircleDot className="text-green-400 text-2xl" />
+                  <p className="text-lg font-semibold">Active</p>
+                </div>
+              ) : (
+                <div className="flex gap-2 justify-start items-center px-5">
+                  <FaCircleDot className="text-yellow-600 text-2xl" />
+                  <p className="text-lg font-semibold">Inactive</p>
+                </div>
+              )}
+            </>
           )}
           <div className="flex gap-2 items-center px-5">
             <FiUser className="text-blue-800 text-2xl" />

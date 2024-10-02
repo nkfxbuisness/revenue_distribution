@@ -15,17 +15,23 @@ import { useNavigate } from "react-router-dom";
 
 const ActiveAccount = () => {
   let navigate = useNavigate();
-  const { user, setUser, token, setToken } = useContext(UserContext);
-  const [enabled, setEnabled] = useState(false);
+  const { user, setUser, token} = useContext(UserContext);
+
   const [disclosure, setDisclosure] = useState(false);
+  const [clicked, setClicked] = useState(false);
+  const [depositField,setDepositField]=useState(false)
+  
+  const [copyProportion, setCopyProportion] = useState("");
+  const [octaReqNo, setOctaReqNo] = useState("");
+  const [emailSame,setEmailSame]=useState(false);
+
   const [transactionID, setTransactionID] = useState("");
   const [transactionRecipt, setTransactionRecipt] = useState("");
   const [transactionReciptFileName, setTransactionReciptFileName] =
     useState("");
   const [transactionReciptURL, setTransactionReciptURL] = useState("");
-  const [octaReqNo, setOctaReqNo] = useState("");
-  const [clicked, setClicked] = useState(false);
 
+  console.log(emailSame);
   console.log(transactionRecipt);
   console.log(transactionReciptFileName);
   const handleFileChange = (file) => {
@@ -33,7 +39,7 @@ const ActiveAccount = () => {
   };
   const handleReActivation = () => {
     let temp = user;
-    temp.activationRequestSubmitted = false;
+    temp.activationStatus.activationRequestSubmitted = false;
     setUser(temp);
     setClicked(true);
   };
@@ -44,24 +50,43 @@ const ActiveAccount = () => {
     console.log(user);
   }, [clicked]);
 
+  const scrollToId = () => {
+    if(copyProportion && octaReqNo){
+      setDepositField(true)
+    }else{
+      showToastMessage("warn","fill the details")
+      console.log("return");
+      
+      return;
+    }
+    const element = document.getElementById("payregFees");
+    console.log(element);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" }); // Smooth scroll to the element
+    }
+  };
   const submit = async () => {
+    if (!copyProportion || !octaReqNo || !transactionID) {
+      showToastMessage("warn", `fill the mandatory fields first !`);
+      return;
+    }
     try {
-      if (!transactionID || !octaReqNo) {
-        showToastMessage("warn", `fill the mandatory fields first !`);
-        return;
-      }
       const config = {
         headers: {
           "Content-type": "application/json",
-          "Authorization": `Bearer ${token}`, // Include the JWT token in the Authorization header
+          Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
         },
       };
+      let initialDepositDetails = {
+        octaDepositReqNo: octaReqNo,
+        regFeesTransactionId:transactionID,
+        regFeesPaymentDate:Date.now()
+      }
       const { data } = await axios.post(
         `http://localhost:4000/api/user/activateAccount/${user._id}`,
         {
-          regFeesReciptUrl: transactionReciptURL,
-          regFeesTransactionId: transactionID,
-          octaRequestNo: octaReqNo,
+          initialDepositDetails,
+          copyProportion
         },
         config
       );
@@ -86,7 +111,7 @@ const ActiveAccount = () => {
       const config = {
         headers: {
           "Content-type": "application/json",
-          "Authorization": `Bearer ${token}`, // Include the JWT token in the Authorization header
+          Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
         },
       };
       const { data } = await axios.put(
@@ -114,13 +139,10 @@ const ActiveAccount = () => {
 
   return (
     <>
-      {user && !user.activationRequestSubmitted ? (
+      {user && !user.activationStatus.activationRequestSubmitted ? (
         <div className="w-1/2 bg-green-100 h-full min-h-screen  flex flex-col mx-auto my-5">
           <div className="flex flex-col w-full  bg-yellow-100 p-5 text-yellow-600 mx-auto rounded-lg">
-            <p className="text-left font-semibold text-lg">
-              Your account is Inactive initially !
-            </p>
-
+            <p className="text-left font-semibold text-lg">Your account is Inactive initially !</p>
             <Disclosure>
               <DisclosureButton
                 className="group flex items-center gap-2"
@@ -137,26 +159,163 @@ const ActiveAccount = () => {
               <DisclosurePanel className="text-start font-light pl-5">
                 <ul className="list-disc text-sm">
                   <li>
-                    Pay the Registration Amount of 1200 INR <br />
-                    <span>Account details</span> <br />
-                    <span>Account No. : 1211111111111</span> <br />
-                    <span>IFSC No. BOBSINGUR</span> <br />
-                    <span>Branch : Singur</span> <br />
+                    Step 1 : Create an account on OctaFx with the same mail id
+                    you have provided here
                   </li>
-                  <li>Provide Octa Account Details</li>
-                  <li>Provide the Deposite Proof</li>
-                  <li>Contact the Admin or Consult to your Referrer</li>
+                  <li>
+                    Step 2 : Choose the copy proportion and deposit the
+                    calculated amount on OctaFx
+                  </li>
+                  <li>Step 3 : Provide the request no. after deposit</li>
+                  <li>
+                    Step 4 : After deposit , pay the registration fees to the
+                    given beneficiary
+                  </li>
+                  <li>
+                    Step 3 : Provide the payment recipt and transaction/UTR No.
+                    for varification
+                  </li>
+                  <li>
+                    <b>
+                      Contact the Admin or Consult to your Referrer for
+                      assistance
+                    </b>
+                  </li>
                 </ul>
               </DisclosurePanel>
             </Disclosure>
           </div>
 
-          <form action="" className="flex flex-col gap-3 mt-3">
+          {/* deposit on octa  */}
+          <div className="flex flex-col gap-3 w-full items-center justify-center bg-blue-100 rounded-lg mt-5 p-5">
+            <h3 className="flex justify-center font-bold text-3xl text-blue-600 pb-4">
+              Deposit on OctaFx
+            </h3>
+            {/* min investable amount  */}
+            <div className="flex w-full text-left gap-5">
+              <p className="font-normal text-lg text-blue-600">
+                Minimum Investable Amount{" "}
+                <span className="bg-green-100 text-green-600 px-2 rounded-md">
+                  $ 100
+                </span>
+              </p>
+            </div>
+
+            {/* select your copy proportion  */}
+            <div className="flex w-full text-left gap-5">
+              <label
+                htmlFor="octaReqNo"
+                className="font-normal text-lg text-blue-600 text-nowrap w-fit"
+              >
+                Select Your Copy Proportion
+              </label>
+              <select
+                id="pet-select"
+                className="text-black py-1 px-2 rounded-md outline-none shadow-md focus:outline-blue-400"
+                value={copyProportion}
+                onChange={(e) => setCopyProportion(e.target.value)}
+                disabled={depositField}
+              >
+                <option value="">--Please choose an option--</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+              </select>
+            </div>
+
+            {/* Amount to deposit on octaFx  */}
+            <div className="flex w-full text-left gap-5">
+              <p className="font-normal text-lg text-blue-600">
+                Amount to Deposit On OctaFx{" "}
+                <span className="bg-green-100 text-green-600 px-2 rounded-md">
+                  $ {copyProportion !== "" ? 100 * copyProportion : ""}
+                </span>
+              </p>
+            </div>
+
+            {/* octa request no  */}
+            <div className="flex w-full text-left gap-5">
+              <label
+                htmlFor="octaReqNo"
+                className="font-normal text-lg text-blue-600 text-nowrap w-fit"
+              >
+                OctaFx Request No.
+              </label>
+              <input
+                type="text"
+                className="text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400 w-full shadow-md"
+                value={octaReqNo}
+                onChange={(e)=>setOctaReqNo(e.target.value)}
+                disabled={depositField}
+                required
+              />
+            </div>
+
+            {/* same email  */}
+            <div className="flex w-full text-left gap-2">
+              <input type="checkbox" checked={emailSame} onChange={(e) => setEmailSame(e.target.checked)} disabled={depositField} />
+              <p className="text-blue-500 text-sm">
+                The email used to open the OctaFX account is the same as the one
+                provided here
+              </p>
+            </div>
+
+            {/* done button  */}
+            <div className="flex w-full justify-end mt-4">
+            {!depositField?
+              <button
+                className={`py-1 px-2 rounded-lg bg-blue-600 font-semibold text-white ${emailSame?"opacity-100":"opacity-50"}`}
+                onClick={scrollToId}
+                disabled={!emailSame}
+              >
+                Deposit Done
+              </button>:""}
+            </div>
+          </div>
+
+          {/* pay registration fees */}
+          <div
+            className="flex flex-col gap-4 w-full items-center justify-center bg-blue-100 rounded-lg mt-5 p-5"
+            id="payregFees"
+          >
+            <h3 className="flex justify-center font-bold text-3xl text-blue-600 pb-4">
+              Pay Registration Fees
+            </h3>
+            {/* Registration fees  */}
+            <div className="flex w-full text-left gap-5">
+              <p className="font-normal text-lg text-blue-600">
+                Registration Fees is{" "}
+                <span className="bg-green-100 text-green-600 px-2 rounded-md">
+                  ₹ 1200
+                </span>
+              </p>
+            </div>
+
+            {/* Account details  */}
+            <div className="flex flex-col w-full text-left gap-5">
+              <p className="font-normal text-lg text-blue-600">
+                Pay the Registration fees to the given beneficiary
+              </p>
+              <div>
+                <p>Account Number : 94337903461</p>
+                <p>Beneficiary Name : Nkfxbuisness Private Limited</p>
+                <p>IFSC Code : BARB0SINGUR</p>
+                <p>Bank : State Bank of India</p>
+              </div>
+            </div>
+
             {/* transactionID */}
             <div className="flex flex-col w-full text-left gap-2">
               <label
                 htmlFor="transactionID"
-                className="font-bold text-lg text-blue-600"
+                className="font-normal text-lg text-blue-600"
               >
                 Registration Fees payment transaction/UTR No.
               </label>
@@ -172,20 +331,20 @@ const ActiveAccount = () => {
 
             {/* transaction recitp  */}
             <div className="flex flex-col  w-full text-left gap-2">
-              <label className="font-bold text-lg text-blue-600">
+              <label className="font-normal text-lg text-blue-600">
                 Registration Fees payment transaction Recipt
               </label>
-              <div className="flex">
+              <div className="flex ">
                 <input
                   type="file"
                   id="transactionRecipt"
-                  className="w-full hidden"
+                  className="w-full hidden shadow-md"
                   onChange={(e) => handleFileChange(e.target.files[0])}
                 />
-                <div className="flex w-full rounded-md">
+                <div className="flex w-full rounded-md shadow-md">
                   <label
                     htmlFor="transactionRecipt"
-                    className="w-32 cursor-pointer inline-flex items-center px-4 py-2 bg-blue-600 text-white font-semibold  shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-l-md"
+                    className="w-32 cursor-pointer inline-flex items shadow-md-center px-4 py-2 bg-blue-600 text-white font-semibold  shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-l-md"
                   >
                     Select file
                   </label>
@@ -196,90 +355,38 @@ const ActiveAccount = () => {
                     {transactionReciptFileName}
                   </div>
                 </div>
-                <div className="flex justify-center items-center py-2 rounded-md w-20 h-full bg-blue-600 text-white cursor-pointer">
+                <div className="flex justify-center items-center py-2 rounded-md w-20 h-full bg-blue-600 text-white cursor-pointer ml-2 shadow-md">
                   <MdUpload className="text-2xl" />
                 </div>
               </div>
             </div>
 
-            {/* account opening done  */}
-            <div className="flex flex-col gap-2">
-              <p className="font-bold text-lg text-blue-600 text-left">
-                Account opening and initial amount deposit is done in OctaFx
-              </p>
-              <div className="flex ">
-                <p
-                  className={`font-bold text-base px-2 ${
-                    enabled ? "text-gray-400" : "text-blue-600"
-                  }`}
-                >
-                  No
-                </p>
-                <Switch
-                  checked={enabled}
-                  onChange={setEnabled}
-                  className="group inline-flex h-6 w-11 items-center rounded-full bg-gray-200 transition data-[checked]:bg-blue-600"
-                >
-                  <span className="size-4 translate-x-1 rounded-full bg-white transition group-data-[checked]:translate-x-6" />
-                </Switch>
-                <p
-                  className={`font-bold text-base px-2 ${
-                    enabled ? "text-blue-600" : "text-gray-400"
-                  }`}
-                >
-                  Yes
-                </p>
-              </div>
-            </div>
-
-            {/* octaReqNo */}
-            {enabled ? (
-              <div className="flex flex-col w-full text-left gap-1">
-                <label
-                  htmlFor="octaReqNo"
-                  className="font-bold text-lg text-blue-600"
-                >
-                  Request No for diposit in OctaFx
-                </label>
-                <input
-                  type="text"
-                  id="octaReqNo"
-                  value={octaReqNo}
-                  onChange={(e) => setOctaReqNo(e.target.value)}
-                  className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400"
-                  required
-                />
-              </div>
+            {/* activate button  */}
+            {user?.activationStatus.requestRejected ? (
+              <button
+                onClick={() => resubmit()}
+                className={`flex items-center w-fit px-3 py-2 mt-5 bg-blue-600 text-white font-semibold rounded-md `}
+                
+              >
+                Resubmit Activation Request
+              </button>
             ) : (
-              ""
+              <button
+                onClick={() => submit()}
+                className={`flex items-center w-fit px-3 py-2 mt-5 bg-blue-600 text-white font-semibold rounded-md hover:opacity-80 transition duration-300 ease-in-out
+             `}
+                
+              >
+                Submit Activation Request
+              </button>
             )}
-          </form>
-          {/* activate button  */}
-          {user?.activationRequestRejected ? (
-            <button
-              onClick={() => resubmit()}
-              className={`flex items-center w-fit px-3 py-2 mt-5 bg-blue-600 text-white font-semibold rounded-md hover:opacity-80 transition duration-300 ease-in-out
-            ${enabled ? "cursor-pointer" : "cursor-no-drop"} `}
-              disabled={!enabled}
-            >
-              Resubmit Activation Request
-            </button>
-          ) : (
-            <button
-              onClick={() => submit()}
-              className={`flex items-center w-fit px-3 py-2 mt-5 bg-blue-600 text-white font-semibold rounded-md hover:opacity-80 transition duration-300 ease-in-out
-            ${enabled ? "cursor-pointer" : "cursor-no-drop"} `}
-              disabled={!enabled}
-            >
-              Submit Activation Request
-            </button>
-          )}
+          </div>
         </div>
       ) : (
         ""
       )}
 
-      {user?.activationRequestSubmitted && user?.activationRequestRejected ? (
+      {user?.activationStatus.activationRequestSubmitted && user?.activationStatus.requestRejected ? (
         <div className="w-1/2  h-full min-h-screen  flex items-center mx-auto my-5">
           <div className="flex flex-col w-full  bg-yellow-100 p-5 text-yellow-600 mx-auto rounded-lg">
             <Disclosure>
@@ -296,12 +403,12 @@ const ActiveAccount = () => {
               </DisclosureButton>
 
               <DisclosurePanel className="text-start font-light ">
-                <p>{user.activationRejectionRemarks}</p>
+                <p className="text-black">Remarks : {user.activationStatus.rejectionRemarks}</p>
                 <p
                   className="text-blue-600 underline cursor-pointer"
                   onClick={() => handleReActivation()}
                 >
-                  activate account
+                  Resubmit Activation Request
                 </p>
               </DisclosurePanel>
             </Disclosure>
@@ -310,7 +417,7 @@ const ActiveAccount = () => {
       ) : (
         ""
       )}
-      {user.activationRequestSubmitted && !user.activationRequestRejected ? (
+      {user.activationStatus.activationRequestSubmitted && !user.activationStatus.activationRequestRejected ? (
         <div className="w-1/2  h-full min-h-screen  flex items-center mx-auto my-5">
           <div className="flex flex-col w-full  bg-yellow-100 p-5 text-yellow-600 mx-auto rounded-lg">
             <Disclosure>

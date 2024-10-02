@@ -28,7 +28,7 @@ const BasicInfo = () => {
             name="name"
             value={userData["name"] || ""}
             onChange={handleChange}
-            className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400"
+            className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400 shadow-md"
             required
           />
           {errors.name && <p className="text-red-600 text-sm font-thin">{errors.name}</p>}
@@ -45,7 +45,7 @@ const BasicInfo = () => {
             name="mobileNo"
             value={userData["mobileNo"] || ""}
             onChange={handleChange}
-            className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400"
+            className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400 shadow-md"
           />
           {errors.mobileNo && <p className="text-red-600 text-sm font-thin">{errors.mobileNo}</p>}
         </div>
@@ -60,7 +60,7 @@ const BasicInfo = () => {
             name="DOB"
             value={userData["DOB"] || ""}
             onChange={handleChange}
-            className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400"
+            className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400 shadow-md"
           />
           {errors.DOB && <p className="text-red-600 text-sm font-thin">{errors.DOB}</p>}
         </div>
@@ -71,7 +71,7 @@ const BasicInfo = () => {
             Address <span className="font-thin">(As per of KYC documents)</span>
           </label>
           <textarea
-            className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400"
+            className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400 shadow-md"
             id="address"
             name="address"
             value={userData["address"] || ""}

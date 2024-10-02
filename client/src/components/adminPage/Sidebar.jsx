@@ -46,12 +46,12 @@ const Sidebar = () => {
       icon: <GrUpdate />,
       isActive: currentPath.includes("profitUpdate"),
     },
-    {
-      name: "Update Diposite",
-      route: "updateDiposite",
-      icon: <GrValidate />,
-      isActive: currentPath.includes("updateDiposite"),
-    },
+    // {
+    //   name: "Update Diposite",
+    //   route: "updateDiposite",
+    //   icon: <GrValidate />,
+    //   isActive: currentPath.includes("updateDiposite"),
+    // },
     {
       name: "Comission Distribution",
       route: "ComissionDistribution",

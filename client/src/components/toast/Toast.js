@@ -16,6 +16,11 @@ const showToastMessage = (state,s) => {
         position: "bottom-center"
       });
     }
+    else if(state ==='info'){
+      return toast.info(s, {
+        position: "bottom-center"
+      });
+    }
   }
 
   export default showToastMessage;

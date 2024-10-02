@@ -79,7 +79,8 @@ const Sidebar = () => {
         className=" flex flex-col h-screen fixed right-0 bg-white pl-0 pr-3 py-5 mx-2 mt-12"
         style={{ width: 285 }}
       >
-        {user?.active ? (
+        {user.activationStatus.suspended?"":<>
+        {user.activationStatus.active ? (
           ""
         ) : (
           <>
@@ -105,7 +106,7 @@ const Sidebar = () => {
           </>
         )}
 
-        {user?.active ? (
+        {user?.activationStatus.active ? (
           <>
             {fields.map((field) => (
               <>
@@ -143,6 +144,7 @@ const Sidebar = () => {
         ) : (
           ""
         )}
+        </>}
       </div>
     </>
   );

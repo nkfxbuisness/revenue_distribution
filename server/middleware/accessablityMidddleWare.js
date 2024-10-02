@@ -5,16 +5,16 @@ const Admin = require("../models/adminModel")
 
 const authenticate = async (req, res, next) => {
   const token = req.header('Authorization')?.replace('Bearer ', '');
-  console.log(token);
 
   if (!token) {
-    return res.status(401).json({ message: 'No token provided, authorization denied' });
+    return res.json({ message: 'No token provided, authorization denied' });
   }
 
   try {
     // Decode the token and retrieve the roles from the payload
     
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("decoded",decoded)
     const { id, roles } = decoded; // Assuming the token payload contains id and roles
 
     // Determine the correct model to query based on the roles
@@ -27,15 +27,15 @@ const authenticate = async (req, res, next) => {
     }
 
     if (!user) {
-      return res.status(401).json({ message: 'User not found, authorization denied' });
+      return res.json({ success:false , message: 'User not found, authorization denied' });
     }
 
     req.user = user;
     console.log("Authenticated as", roles);
     next();
   } catch (err) {
-    console.error(err);
-    res.status(401).json({ message: 'Token is not valid' });
+    // console.error(err);
+    res.json({success:false, message: 'Session Expired' });
   }
 };
 
@@ -47,7 +47,7 @@ const authorizeRoles = (allowedRoles) => {
 
     if (!hasRole) {
       console.log("unauthorized")
-      return res.status(403).json({ message: 'Access denied: insufficient permissions' });
+      return res.json({ success:false ,message: 'Access denied: insufficient permissions' });
     }
     console.log(`authorized ${userRoles[0]}`)
     next();

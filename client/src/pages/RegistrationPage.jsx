@@ -24,7 +24,7 @@ const RegistrationPage = () => {
     navigate("/login");
   };
 
-  const [referralCode, setReferralCode] = useState("");
+  // const [referralCode, setReferralCode] = useState("");
   const [referralCodeField, setReferralCodeField] = useState(false);
   const [referralCodeStatus, setReferralCodeStatus] = useState("");
   const [OTPfield, setOTPfield] = useState(false);
@@ -68,7 +68,6 @@ const RegistrationPage = () => {
   const [errors, setErrors] = useState({});
 
   const submit = async (e) => {
-    console.log("hello submit");
     console.log(userData)
     
     // e.preventDefault();
@@ -101,7 +100,7 @@ const RegistrationPage = () => {
       return;
     }
 
-    setFinalData(userData);
+    // setFinalData(userData);
 
     
     try {
@@ -112,17 +111,21 @@ const RegistrationPage = () => {
           "Content-type": "application/json",
         },
       };
-      const data = await axios.post(
+      const {data} = await axios.post(
         "http://localhost:4000/api/auth/user/signup",
-        finalData,
+        userData,
         config
       );
       console.log(data);
-      showToastMessage("success", "Registration Successful !");
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      if(data?.success){
+        showToastMessage("success", "Registration Successful !");
+        navigate("/auth/login");
+        setIsSubmitted(true);
+        localStorage.setItem("userInfo", JSON.stringify(data?.data));
+      }else{
+        showToastMessage("error", data?.message);
+      }
       // setLoading(false);
-      navigate("/auth/login");
-      setIsSubmitted(true);
     } catch (error) {
       showToastMessage("error", `${error}`);
       // setLoading(false);
@@ -159,8 +162,8 @@ const RegistrationPage = () => {
                   setUserData,
                   finalData,
                   setFinalData,
-                  referralCode,
-                  setReferralCode,
+                  // referralCode,
+                  // setReferralCode,
                   referralCodeField,
                   setReferralCodeField,
                   referralCodeStatus,

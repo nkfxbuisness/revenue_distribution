@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 
-const Temp = ({verifyOTP,enterOTP,setEnterOTP,OTPverified}) => {
+const Temp = ({verifyOTP,enterOTP,setEnterOTP,OTPverified,resendOTP}) => {
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const inputRefs = useRef([]);
 
@@ -68,9 +68,9 @@ const Temp = ({verifyOTP,enterOTP,setEnterOTP,OTPverified}) => {
       </div>
       <p className="text-sm text-center mt-4 mb-2">
         Didn’t get the code?{" "}
-        <a href="#" className="text-blue-600 font-medium">
+        <span className="text-blue-600 font-medium" onClick={resendOTP}>
           Click to resend.
-        </a>
+        </span>
       </p>
     </div>
   );

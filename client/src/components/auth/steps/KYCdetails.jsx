@@ -45,7 +45,7 @@ const KYCdetails = () => {
             name="PANno"
             value={userData["PANno"] || ""}
             onChange={handleChange}
-            className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400"
+            className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400 shadow-md"
             required
           />
           {errors.PANno && (
@@ -110,7 +110,7 @@ const KYCdetails = () => {
             name="aadhaarNo"
             value={userData["aadhaarNo"] || ""}
             onChange={handleChange}
-            className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400"
+            className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400 shadow-md"
             required
           />
           {errors.aadhaarNo && (

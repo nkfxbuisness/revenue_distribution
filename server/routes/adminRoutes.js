@@ -14,6 +14,7 @@ const {
   updatePaidStatus,
 } = require("../controllers/adminControllers");
 const { authenticate, authorizeRoles } = require("../middleware/accessablityMidddleWare");
+const { addVariable, getVariable, updateVariable } = require("../controllers/variableControllers");
 const Router = express.Router();
 
 Router.get("/accountActivation",authenticate, authorizeRoles(['superAdmin','accountActivation']), accountActivation);
@@ -28,5 +29,9 @@ Router.post("/profitUpdate",authenticate, authorizeRoles(['superAdmin']),  profi
 Router.get("/getAllWithdrawalRequests",authenticate, authorizeRoles(['superAdmin']),getAllWithdrawalRequests  );
 Router.post("/download-pending-requests",authenticate, authorizeRoles(['superAdmin']),downloadInCSVformat  );
 Router.put("/update-paid-status",authenticate, authorizeRoles(['superAdmin']),updatePaidStatus  );
+Router.post("/addVariable",addVariable  );
+Router.get("/getVariable/:key",getVariable  );
+Router.put("/updateVariable/:key",updateVariable  );
+
 
 module.exports = Router;
