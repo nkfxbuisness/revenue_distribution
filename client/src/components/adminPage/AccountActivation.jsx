@@ -191,7 +191,7 @@ const AccountActivation = () => {
               type="text"
               id="transNo"
               name="transNo"
-              value={user?.regFeesTransactionId}
+              value={user?.initialDepositDetails.regFeesTransactionId}
               className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400 bg-gray-200 font-semibold"
               disabled
             />

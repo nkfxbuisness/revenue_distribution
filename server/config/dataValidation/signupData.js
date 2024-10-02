@@ -16,14 +16,15 @@ const userSchema = Joi.object({
   PANno: Joi.string().pattern(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/).required(), // PAN number pattern for India
   aadhaarNo: Joi.string().length(12).pattern(/^[0-9]+$/).required(), // Assuming a 12-digit Aadhaar number
   password: Joi.string()
-  .min(5)
-  .pattern(new RegExp('^(?=.*[A-Z])(?=.*[0-9]).{5,}$'))
+  // .min(5)
+  // .pattern(new RegExp('^(?=.*[A-Z])(?=.*[0-9]).{5,}$'))
   .required()
-  .messages({
-    'string.min': 'Password should have a minimum of 5 characters',
-    'string.pattern.base': 'Password should contain at least 1 uppercase letter and 1 number',
-    'any.required': 'Password is required'
-  }),
+  // .messages({
+  //   'string.min': 'Password should have a minimum of 5 characters',
+  //   'string.pattern.base': 'Password should contain at least 1 uppercase letter and 1 number',
+  //   'any.required': 'Password is required'
+  // }),
+  ,
   confPassword: Joi.any().valid(Joi.ref('password')).required().messages({'any.only': 'Passwords must match'}), // Confirm password field
   // copyProportion: Joi.number().required().default(1),
   // referral: Joi.string().required(),

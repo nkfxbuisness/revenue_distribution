@@ -10,7 +10,7 @@ import UserContext, { checkTokenExpiration } from "../context/UserContext";
 const LoginPage = () => {
   let navigate = useNavigate();
   const {user,setUser,token,setToken} = useContext(UserContext)
-  console.log(user,token)
+  // console.log(user,token)
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
@@ -35,18 +35,21 @@ const LoginPage = () => {
         },
         config
       );
-      // console.log(data);
+      console.log(data);
       console.log(data.user);
-      setUser(data.user);
-      setToken(data.token);
-      showToastMessage("success", "Login Successful !");
-      navigate("/user");
-      localStorage.setItem("userInfo", JSON.stringify(data.user));
-      localStorage.setItem("token", data.token);
+      if(data.success){
+        setUser(data.user);
+        setToken(data.token);
+        showToastMessage("success", "Login Successful !");
+        navigate("/user");
+        localStorage.setItem("userInfo", JSON.stringify(data.user));
+        localStorage.setItem("token", data.token);
+      }else{
+        showToastMessage("error",data?.message)
+      }
 
     } catch (error) {
       showToastMessage("error", `${error}`);
-      // setLoading(false);
     }
 ;
   };
@@ -71,7 +74,7 @@ const LoginPage = () => {
               name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400"
+              className="w-full text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400 shadow-md"
             />
           </div>
 
@@ -90,11 +93,11 @@ const LoginPage = () => {
                 name="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400 w-full"
+                className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400 w-full shadow-md"
                 required
               />
               <div
-                className="flex justify-center items-center py-1 rounded-md w-20 h-full bg-blue-600 text-white cursor-pointer "
+                className="flex justify-center items-center py-1 rounded-md w-20 h-full bg-blue-600 text-white cursor-pointer shadow-md"
                 onClick={() => setShow(!show)}
               >
                 {show ? (

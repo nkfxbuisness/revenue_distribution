@@ -11,8 +11,8 @@ const SetCredentials = () => {
   const {
     userData,
     setUserData,
-    referralCode,
-    setReferralCode,
+    // referralCode,
+    // setReferralCode,
     referralCodeField,
     setReferralCodeField,
     referralCodeStatus,
@@ -23,16 +23,17 @@ const SetCredentials = () => {
     setEnterOTP,
     OTPverified,
     setOTPVerified,
-    errors
+    errors,
   } = useContext(StepperContext);
   const [show, setShow] = useState(false);
+  const [getOtpDisabled, setGetOtpDisabled] = useState(false);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
   };
 
   const verifyReferralCode = async () => {
-    if (!referralCode || referralCode === "") {
+    if (!userData["referral"] || userData["referral"] === "") {
       showToastMessage("warn", "provide referral code");
       return;
     }
@@ -44,7 +45,7 @@ const SetCredentials = () => {
       };
       const { data } = await axios.post(
         "http://localhost:4000/api/auth/user/signup/verifyReferralCode",
-        { referralCode },
+        { referralCode: userData["referral"] },
         config
       );
       setReferralCodeStatus(data.message);
@@ -53,12 +54,15 @@ const SetCredentials = () => {
       showToastMessage("error", error.message);
     }
   };
-  const generateOTP = async()=>{
-    setOTPfield(true);
-    if(!userData["email"]){
-      showToastMessage("warn","enter email first")
+  const generateOTP = async () => {
+    if (!userData["email"]) {
+      showToastMessage("warn", "enter email first");
       return;
     }
+    console.log("sending email");
+    setGetOtpDisabled(true);
+
+    setOTPfield(true);
     try {
       const config = {
         headers: {
@@ -70,10 +74,41 @@ const SetCredentials = () => {
         { email: userData["email"] },
         config
       );
+      if(data?.success){
+        showToastMessage("success", data?.message);
+      }else{
+        showToastMessage("warn", data?.message);
+      }
     } catch (error) {
       showToastMessage("error", error);
     }
-  }
+  };
+  const resendOTP = async () => {
+    console.log("resending email");
+    if (!userData["email"]) {
+      showToastMessage("warn", "enter email first");
+      return;
+    }
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const { data } = await axios.post(
+        "http://localhost:4000/api/auth/user/signup/resendOTP",
+        { email: userData["email"] },
+        config
+      );
+      if (data.success) {
+        showToastMessage("success", data?.message);
+      } else {
+        showToastMessage("error", data?.message);
+      }
+    } catch (error) {
+      showToastMessage("error", error);
+    }
+  };
   const verifyOTP = async () => {
     console.log(enterOTP);
     if (!enterOTP || enterOTP === "") {
@@ -93,10 +128,10 @@ const SetCredentials = () => {
       );
       console.log(data);
       setOTPVerified(data);
-      if(data.success){
+      if (data.success) {
         setOTPfield(false);
-      }else{
-        setEnterOTP("")
+      } else {
+        showToastMessage("error",data?.message)
       }
     } catch (error) {
       showToastMessage("error", error);
@@ -116,16 +151,16 @@ const SetCredentials = () => {
               type="text"
               id="referral"
               name="referral"
-              value={referralCode}
-              onChange={(e) => setReferralCode(e.target.value)}
-              className={` text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400 w-full  ${
+              value={userData["referral"] || ""}
+              onChange={handleChange}
+              className={` text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400 w-full shadow-md  ${
                 referralCodeField ? "bg-green-300" : "bg-white"
               }`}
               required
               disabled={referralCodeField}
             />
             <button
-              className={`flex justify-center items-center py-1 px-2 rounded-md h-full bg-blue-600 text-white ${
+              className={`flex justify-center items-center py-1 px-2 rounded-md h-full bg-blue-600 text-white shadow-md ${
                 referralCodeField
                   ? "cursor-default opacity-50"
                   : "cursor-pointer"
@@ -136,9 +171,9 @@ const SetCredentials = () => {
               Verify <GrValidate className="text-2xl ml-3" />
             </button>
           </div>
-          <p
-            className={`text-xs font-light text-blue-600`}
-          >Click on "Verify" before proceeding farther</p>
+          <p className={`text-xs font-light text-blue-600`}>
+            Click on "Verify" before proceeding farther
+          </p>
           <p
             className={`text-sm font-light ${
               referralCodeField ? "text-green-600" : "text-red-600"
@@ -160,11 +195,11 @@ const SetCredentials = () => {
               name="password"
               value={userData["password"] || ""}
               onChange={handleChange}
-              className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400 w-full"
+              className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400 w-full shadow-md"
               required
             />
             <div
-              className="flex justify-center items-center py-1 rounded-md w-20 h-full bg-blue-600 text-white cursor-pointer "
+              className="flex justify-center items-center py-1 rounded-md w-20 h-full bg-blue-600 text-white cursor-pointer shadow-md "
               onClick={() => setShow(!show)}
             >
               {show ? (
@@ -174,7 +209,9 @@ const SetCredentials = () => {
               )}
             </div>
           </div>
-          {errors.password && <p className="text-red-600 text-sm font-thin">{errors.password}</p>}
+          {errors.password && (
+            <p className="text-red-600 text-sm font-thin">{errors.password}</p>
+          )}
           <ul className="list-disc text-xs font-light ml-3 text-blue-600">
             <li>Password should have minimum 5 characters</li>
             <li>Password should have minimum 1 uppercase</li>
@@ -196,10 +233,14 @@ const SetCredentials = () => {
             name="confPassword"
             value={userData["confPassword"] || ""}
             onChange={handleChange}
-            className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400"
+            className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400 shadow-md"
             required
           />
-          {errors.confPassword && <p className="text-red-600 text-sm font-thin">{errors.confPassword}</p>}
+          {errors.confPassword && (
+            <p className="text-red-600 text-sm font-thin">
+              {errors.confPassword}
+            </p>
+          )}
         </div>
 
         {/* email  */}
@@ -214,25 +255,42 @@ const SetCredentials = () => {
               name="email"
               value={userData["email"] || ""}
               onChange={handleChange}
-              className={`w-full text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400 ${
+              className={`w-full text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400 shadow-md ${
                 OTPverified.success ? "bg-green-300" : "bg-white"
               }`}
               disabled={OTPverified.success}
             />
             <button
-              className={`flex justify-center items-center py-1 rounded-md px-2 text-nowrap h-full bg-blue-600 text-white cursor-pointer ${OTPverified.success?"opacity-50 cursor-default":""}`}
+              className={`flex justify-center items-center py-1 rounded-md px-2 text-nowrap h-full bg-blue-600 text-white cursor-pointer shadow-md ${
+                getOtpDisabled ? "opacity-50 cursor-default" : ""
+              }`}
               onClick={() => generateOTP()}
-              disabled={OTPverified.success}
+              disabled={getOtpDisabled}
             >
               Get OTP
             </button>
           </div>
-          <p className="text-blue-600 text-xs font-light">Verify email using OTP</p>
-          {errors.email && <p className="text-red-600 text-sm font-thin">{errors.email} | {OTPverified.success?"":"verify the email before proceed farther"}</p>}
-          <p className={`${OTPverified.success?"text-green-600":"text-red-600"} text-xs font-light`}>{OTPverified.message}</p>
+          <p className="text-blue-600 text-xs font-light">
+            Verify email using OTP
+          </p>
+          {errors.email && (
+            <p className="text-red-600 text-sm font-thin">
+              {errors.email} |{" "}
+              {OTPverified.success
+                ? ""
+                : "verify the email before proceed farther"}
+            </p>
+          )}
+          <p
+            className={`${
+              OTPverified.success ? "text-green-600" : "text-red-600"
+            } text-xs font-light`}
+          >
+            {OTPverified.message}
+          </p>
           {OTPfield ? (
             <div className="flex items-center gap-4 mt-4 flex-wrap">
-              <label className="font-bold text-lg text-blue-600 "> 
+              <label className="font-bold text-lg text-blue-600 ">
                 Enter 6 digit code
               </label>
               <Temp
@@ -240,6 +298,7 @@ const SetCredentials = () => {
                 enterOTP={enterOTP}
                 setEnterOTP={setEnterOTP}
                 OTPverified={OTPverified}
+                resendOTP={resendOTP}
               />
             </div>
           ) : (

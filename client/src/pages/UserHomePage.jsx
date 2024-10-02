@@ -10,8 +10,11 @@ const UserHomePage = () => {
   let navigate = useNavigate();
   const { user, setUser, token, setToken } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("userInfo"));
+    console.log(storedUser);
+    
     const storedToken = localStorage.getItem("token");
     if (!storedUser || !storedToken) {
       console.log("no user or token found in localstorege / loggedout");
@@ -35,7 +38,7 @@ const UserHomePage = () => {
       <div className="flex relative">
         <Sidebar />
         <div
-          className="mt-12 w-full mr-[280] h-screen bg-blue-50 "
+          className="mt-12 w-full mr-[280] min-h-screen h-full  bg-blue-50 "
           style={{ marginRight: 280 }}
         >
           <Outlet />

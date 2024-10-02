@@ -9,6 +9,7 @@ const Admin = require("../models/adminModel");
 const Profit = require("../models/profitModel");
 const User = require("../models/userModel");
 const WithdrawalRequest = require("../models/withdrawalRequestModel");
+const Variable = require("../models/variableModel");
 
 // Utility function to format the date
 function getFormattedDate(date) {
@@ -25,12 +26,13 @@ function getFormattedDate(date) {
 const accountActivation = async (req, res) => {
   try {
     const users = await User.find({
-      active: false,
-      activationRequestSubmitted: true,
+      'activationStatus.active': false,                
+      'activationStatus.activationRequestSubmitted': true  
     });
+
     return res.status(200).json({
       success: true,
-      message: "not active users",
+      message: "Users with pending activation requests",
       data: users,
     });
   } catch (error) {
@@ -51,12 +53,24 @@ const accountActivationById = async (req, res) => {
   try {
     const updatedUser = await User.findByIdAndUpdate(
       id,
-      { $set: { active: true } },
-      { new: true, runValidators: true }
+      { 
+        $set: { 
+          'activationStatus.active': true,           
+          'activationStatus.activeOn': new Date()    
+        } 
+      },
+      { new: true, runValidators: true }  
     );
+    if (!updatedUser) {
+      return res.json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
     return res.status(200).json({
       success: true,
-      message: "not active users",
+      message: "User activated successfully",
       data: updatedUser,
     });
   } catch (error) {
@@ -79,8 +93,8 @@ const activationRequestRejectById = async (req, res) => {
       id,
       {
         $set: {
-          activationRequestRejected: true,
-          activationRejectionRemarks: remarks,
+          'activationStatus.requestRejected': true,
+          'activationStatus.rejectionRemarks': remarks,
         },
       },
       { new: true, runValidators: true }
@@ -334,12 +348,18 @@ const getAllWithdrawalRequests = async (req, res) => {
   try {
     const requests = await WithdrawalRequest.find({ paid: false }).populate(
       "user",
-      "name mobileNo accountNo IFSCcode bank"
+      "name mobileNo accountNo IFSCcode bank activationStatus"
     );
+
+    // Filter out requests where the user is suspended
+    const filteredRequests = requests.filter(
+      (request) => request.user && !request.user.activationStatus.suspended
+    );
+
     return res.status(200).json({
       success: true,
-      message: "all withdrawal requests featched successfully",
-      data: requests,
+      message: "withdrawal requests featched successfully",
+      data: filteredRequests,
     });
   } catch (error) {
     console.error(error);
@@ -413,41 +433,62 @@ const downloadInCSVformat = async (req, res) => {
 
 /**
  * Route     /api/admin/update-paid-status
- * Des       update as paid to all pending requests 
+ * Des       update as paid to all pending requests
  * Params    none
  * Access    private
  * Method    put
  */
 
 const updatePaidStatus = async (req, res) => {
-  const { ids } = req.body; // Get the array of IDs from the request body
+  const { ids } = req.body; // Array of withdrawal request IDs
 
   if (!ids || !Array.isArray(ids) || ids.length === 0) {
-    return res
-      .status(400)
-      .json({
-        success: false,
-        message: "No IDs provided or invalid data format",
-      });
+    return res.status(400).json({
+      success: false,
+      message: "No IDs provided or invalid data format",
+    });
   }
 
   try {
-    // Update all documents that match the IDs in the array
-    const result = await WithdrawalRequest.updateMany(
-      { _id: { $in: ids } }, // Match documents with IDs in the provided array
-      { $set: { paid: true } } // Update the 'paid' field to 'true'
-    );
+    // First, find all the withdrawal requests to get their associated users
+    const requests = await WithdrawalRequest.find({ _id: { $in: ids } })
+      .select("user")
+      .lean(); // Use .lean() to return plain JavaScript objects for performance
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: `Successfully updated ${result.modifiedCount} documents.`,
-      });
+    const userIds = [...new Set(requests.map((req) => req.user.toString()))]; // Get unique user IDs
+
+    // Create bulk operations for withdrawal requests
+    const bulkWithdrawals = ids.map((id) => ({
+      updateOne: {
+        filter: { _id: id },
+        update: { $set: { paid: true, paidOn: new Date() } },
+      },
+    }));
+
+    // Create bulk operations for user updates
+    const bulkUsers = userIds.map((userId) => ({
+      updateOne: {
+        filter: { _id: userId },
+        update: { $set: { withdrawalRequestSubmitted: false } },
+      },
+    }));
+
+    // Perform bulk write for both withdrawal requests and users
+    const [withdrawalResult, userResult] = await Promise.all([
+      WithdrawalRequest.bulkWrite(bulkWithdrawals),
+      User.bulkWrite(bulkUsers),
+    ]);
+
+    res.status(200).json({
+      success: true,
+      message: `Successfully updated ${withdrawalResult.modifiedCount} withdrawal requests and ${userResult.modifiedCount} users.`,
+    });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Error updating documents", details: error.message });
+    res.status(500).json({
+      success: false,
+      message: "Error updating records",
+      error: error.message,
+    });
   }
 };
 
@@ -463,5 +504,5 @@ module.exports = {
   profitUpdate,
   getAllWithdrawalRequests,
   downloadInCSVformat,
-  updatePaidStatus
+  updatePaidStatus,
 };

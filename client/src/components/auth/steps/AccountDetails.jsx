@@ -23,7 +23,7 @@ const AccountDetails = () => {
             name="accountNo"
             value={userData["accountNo"] || ""}
             onChange={handleChange}
-            className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400"
+            className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400 shadow-md"
             required
           />
           {errors.accountNo && (
@@ -41,7 +41,7 @@ const AccountDetails = () => {
             name="IFSCcode"
             value={userData["IFSCcode"] || ""}
             onChange={handleChange}
-            className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400"
+            className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400 shadow-md"
             required
           />
           {errors.IFSCcode && (
@@ -59,7 +59,7 @@ const AccountDetails = () => {
             name="bank"
             value={userData["bank"] || ""}
             onChange={handleChange}
-            className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400"
+            className=" text-black py-1 px-2 rounded-md outline-none focus:outline-blue-400 shadow-md"
             placeholder="eg. SBI"
             required
           />

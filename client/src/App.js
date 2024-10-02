@@ -13,7 +13,6 @@ import Dashboard from "./components/userPage/Dashboard";
 import Referral from "./components/userPage/Referral";
 import Wallet from "./components/userPage/Wallet";
 import Withdraw from "./components/userPage/Withdraw";
-import Teams from "./components/userPage/Teams";
 import ActiveAccount from "./components/userPage/ActiveAccount";
 
 // adminComponents
@@ -32,6 +31,7 @@ import TotalBusiness from "./components/userPage/TotalBusiness";
 import TeamBuisness from "./components/userPage/TeamBuisness";
 import PostAnnouncement from "./components/adminPage/PostAnnouncement";
 import Temp from "./components/auth/Temp";
+import AccountSuspended from "./components/userPage/AccountSuspended";
 
 function App() {
   const { user, setUser, token, setToken } = useContext(UserContext);
@@ -45,7 +45,14 @@ function App() {
         <Route path="/auth/login" Component={LoginPage} />
         <Route path="/auth/temp" Component={Temp} />
         <Route path="/user" element={<UserHomePage />}>
-          {user && user.active ? (
+
+          {user && user.activationStatus.suspended?
+            <Route
+            path=""
+            element={<Navigate to={`/user/suspended/${id}`} replace />}
+          />
+          :<>
+          {user && user.activationStatus.active ? (
             <Route
               path=""
               element={<Navigate to={`/user/dashboard/${id}`} replace />}
@@ -56,16 +63,17 @@ function App() {
               element={<Navigate to={`/user/activeAccount/${id}`} replace />}
             />
           )}
+          </> }
 
           {/* Define your routes for various paths */}
           <Route path="dashboard/:id" element={<Dashboard />} />
           <Route path="wallet/:id" element={<Wallet />} />
           <Route path="withdraw/:id" element={<Withdraw />} />
           <Route path="referral/:id" element={<Referral />} />
-          <Route path="team/:id" element={<Teams />} />
           <Route path="activeAccount/:id" element={<ActiveAccount />} />
           <Route path="totalBusiness/:id" element={<TotalBusiness />} />
           <Route path="teamBusiness/:id" element={<TeamBuisness />} />
+          <Route path="suspended/:id" element={<AccountSuspended />} />
         </Route>
 
         {/* Admin routes  */}
