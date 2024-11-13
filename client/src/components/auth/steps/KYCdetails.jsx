@@ -1,37 +1,36 @@
 import React, { useContext, useState } from "react";
-import { MdUpload } from "react-icons/md";
 import { StepperContext } from "../../../context/StepperContext";
 
 const KYCdetails = () => {
   
   const { userData, setUserData, errors,submitAllowed,setSubmitAllowed } = useContext(StepperContext);
-  const [pan, setPan] = useState();
-  const [aadhaar, setAadhaar] = useState();
+  // const [pan, setPan] = useState();
+  // const [aadhaar, setAadhaar] = useState();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
   };
-  const handleFileChange = (doc, e) => {
-    if (doc === "pan") {
-      setPan(e.target.files[0]);
-      document.getElementById("PANfileName").innerHTML = pan?.name;
-    }
-    if (doc == "aadhaar") {
-      setAadhaar(e.target.files[0]);
-      document.getElementById("AadhaarFileName").innerHTML = aadhaar?.name;
-    }
-  };
-  const handleUpload = () => {
-    document
-      .getElementById("PANupload")
-      .addEventListener("change", function (event) {
-        const fileName = event.target.files[0]
-          ? event.target.files[0].name
-          : "No file chosen";
-        document.getElementById("PANfileName").textContent = fileName;
-      });
-  };
+  // const handleFileChange = (doc, e) => {
+  //   if (doc === "pan") {
+  //     setPan(e.target.files[0]);
+  //     document.getElementById("PANfileName").innerHTML = pan?.name;
+  //   }
+  //   if (doc === "aadhaar") {
+  //     setAadhaar(e.target.files[0]);
+  //     document.getElementById("AadhaarFileName").innerHTML = aadhaar?.name;
+  //   }
+  // };
+  // const handleUpload = () => {
+  //   document
+  //     .getElementById("PANupload")
+  //     .addEventListener("change", function (event) {
+  //       const fileName = event.target.files[0]
+  //         ? event.target.files[0].name
+  //         : "No file chosen";
+  //       document.getElementById("PANfileName").textContent = fileName;
+  //     });
+  // };
   return (
     <>
       <div className="flex flex-col gap-4 w-2/3 mx-auto">

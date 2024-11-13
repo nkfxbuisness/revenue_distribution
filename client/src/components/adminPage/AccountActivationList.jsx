@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import showToastMessage from "../toast/Toast";
 import getFormattedDate from "../toast/getFormattedDate";
@@ -8,7 +8,6 @@ import { LuRefreshCw } from "react-icons/lu";
 import Spinner from "../toast/animation/Spinner";
 import PulseLoader from "../toast/animation/PulseLoader";
 const AccountActivationList = () => {
-  let navigate = useNavigate();
   const [inactiveUsers, setInactiveUsers] = useState([]);
   const { token } = useContext(AdminContext);
   const [refresh, setRefresh] = useState(false);

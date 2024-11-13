@@ -1,4 +1,4 @@
-import React, { createContext, useState,useEffect } from 'react';
+import React, { createContext, useState} from 'react';
 import {jwtDecode} from 'jwt-decode';
 
 
@@ -22,7 +22,7 @@ export const checkTokenExpiration = (token) => {
 export const UserProvider = ({ children }) => {
   const [user,setUser] = useState("");
   const [token,setToken]=useState("");
-  const [admin,setAdmin]=useState("");
+  // const [admin,setAdmin]=useState("");
   
   return (
     <UserContext.Provider value={{ user,setUser,token,setToken }}>

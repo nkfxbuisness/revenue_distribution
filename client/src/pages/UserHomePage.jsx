@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import { jwtDecode } from "jwt-decode";
 import Navbar from "../components/userPage/Navbar";
 import Sidebar from "../components/userPage/Sidebar";
 import { Outlet, useNavigate } from "react-router-dom";
@@ -8,7 +7,7 @@ import UserContext from "../context/UserContext";
 
 const UserHomePage = () => {
   let navigate = useNavigate();
-  const { user, setUser, token, setToken } = useContext(UserContext);
+  const { setUser, setToken } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

@@ -1,8 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useContext} from "react";
+import { useNavigate } from "react-router-dom";
 import { BsGraphUpArrow } from "react-icons/bs";
 import { FaCircleDot } from "react-icons/fa6";
-import { FaUser } from "react-icons/fa";
 import { FiUser } from "react-icons/fi";
 // import { BiLogOut } from "react-icons/bi";
 import { MdOutlineLogout } from "react-icons/md";

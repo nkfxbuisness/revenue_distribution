@@ -64,8 +64,8 @@ const TeamBuisness = () => {
         `http://localhost:4000/api/user/getTeamDetails/${user._id}`,
         config
       );
-      console.log(data.data[0]?.immediateChildren);
-      if (data.success) {
+      console.log(data.data.length);
+      if (data.success && data.data.length) {
         setTeamData(data.data[0]?.immediateChildren);
         if (data.data[0]?.immediateChildren.length > 2) {
           // if (teamData.length > 2) {
@@ -76,6 +76,8 @@ const TeamBuisness = () => {
 
           // Check if all members have the same totalBusiness value
           const firstBusinessValue = teamData[0]?.totalBusiness;
+          console.log(firstBusinessValue);
+          
           const allSameBusiness = teamData.every(
             (member) => member?.totalBusiness === firstBusinessValue
           );
@@ -95,7 +97,7 @@ const TeamBuisness = () => {
         // showToastMessage("success", data.message);
         return;
       } else {
-        showToastMessage("error", data.message);
+        showToastMessage("warn", "team data not found");
         setLoading(false);
       }
     } catch (error) {

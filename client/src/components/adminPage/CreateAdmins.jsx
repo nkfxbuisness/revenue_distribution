@@ -128,7 +128,7 @@ const CreateAdmins = () => {
             Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
           },
         };
-        const { data } = await axios.delete(
+        await axios.delete(
           `http://localhost:4000/api/admin/deleteAdmin/${Admin._id}`,
           config
         );

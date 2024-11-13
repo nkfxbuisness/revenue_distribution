@@ -1,23 +1,19 @@
-import React, { useContext, useState } from "react";
+import React, { useContext} from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { MdDashboard } from "react-icons/md";
-import { FaWallet } from "react-icons/fa";
 import { RiTeamLine } from "react-icons/ri";
 import { BiLogOut } from "react-icons/bi";
-import { GrValidate } from "react-icons/gr";
-import { MdOutlineManageAccounts } from "react-icons/md";
-import user from "../toast/user";
 import { SiTicktick } from "react-icons/si";
-import { PiHandWithdrawFill } from "react-icons/pi";
 import { RiUserAddFill } from "react-icons/ri";
 import { BiTransfer } from "react-icons/bi";
 import { GrUpdate } from "react-icons/gr";
 import { GrAnnounce } from "react-icons/gr";
+import { MdBlock } from "react-icons/md";
+import { FaTrophy } from "react-icons/fa6";
 import AdminContext from "../../context/AdminContext";
 
 const Sidebar = () => {
   let navigate = useNavigate();
-  const { admin, setAdmin, token, setToken } = useContext(AdminContext);
+  const {setAdmin, setToken } = useContext(AdminContext);
   const logoutHandler = () => {
     localStorage.removeItem("adminInfo");
     localStorage.removeItem("adminToken");
@@ -69,6 +65,18 @@ const Sidebar = () => {
       route: "postAnnouncement",
       icon: <GrAnnounce />,
       isActive: currentPath.includes("postAnnouncement"),
+    },
+    {
+      name: "Claims",
+      route: "rewards",
+      icon: <FaTrophy />,
+      isActive: currentPath.includes("rewards"),
+    },
+    {
+      name: "Suspend a User",
+      route: "suspendAUser",
+      icon: <MdBlock />,
+      isActive: currentPath.includes("suspendAUser"),
     },
     // {
     //   name: "Logout",

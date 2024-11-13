@@ -12,6 +12,10 @@ const comissionCreditSchema = new mongoose.Schema({
   amount:{type:Number,required:false},
   date:{type:Date,required:true}
 })
+const rewardsSchema = new mongoose.Schema({
+  milestoneNumber: { type: Number, required: true }, // Milestone number (1 to 11)
+  rewardClaimed: { type: Boolean, default: false } // Whether the reward for this milestone is claimed
+});
 
 const userSchema = new mongoose.Schema({
     name:{type : String , required : true},
@@ -38,7 +42,8 @@ const userSchema = new mongoose.Schema({
       activationRequestSubmitted: { type: Boolean, default: false },
       requestRejected: { type: Boolean, default: false},
       rejectionRemarks: { type: String, required: false },
-      suspended: { type: Boolean, default: false }
+      suspended: { type: Boolean, default: false },
+      suspentionRemarks: { type: String, default: false }
     },
 
     initialDepositDetails: {
@@ -53,7 +58,16 @@ const userSchema = new mongoose.Schema({
     creditData:[comissionCreditSchema],
     withdrawalRequests:[{type:mongoose.Schema.Types.ObjectId,ref:"WithdrawalRequest"}],
     withdrawalRequestSubmitted:{type:Boolean,default:false},
-    role:{type:String , default:"user"}
+    role:{type:String , default:"user"},
+
+    // New field to track milestones
+    rewards: {
+      type: [rewardsSchema],
+      default: Array.from({ length: 11 }, (_, index) => ({
+        milestoneNumber: index + 1,
+        rewardClaimed: false
+      }))
+    }
     },
     { timestamps: true }
 );

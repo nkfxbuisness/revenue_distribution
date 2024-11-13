@@ -32,7 +32,7 @@ app.use('/api/test',testRoutes)
 
 
 app.get("/",(req,res)=>{
-    res.send("listining to port");
+    res.send("Server is running ");
 })
 // app.get('/s3Url', async (req, res) => {
 //     const url = await generateUploadURL()

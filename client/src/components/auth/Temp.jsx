@@ -29,10 +29,10 @@ const Temp = ({verifyOTP,enterOTP,setEnterOTP,OTPverified,resendOTP}) => {
     }
   };
 
-  const handleSubmit = () => {
-    alert("Entered OTP is: " + otp.join(""));
-    // You can add form submission logic here
-  };
+  // const handleSubmit = () => {
+  //   alert("Entered OTP is: " + otp.join(""));
+  //   // You can add form submission logic here
+  // };
   useEffect(() => {
     if(OTPverified.success===false && OTPverified.message==="invalid OTP : reenter correct OTP."){
       setOtp(new Array(6).fill(""))
