@@ -24,9 +24,9 @@ const WithdrawlRequests = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
-  const [name, setName] = useState();
-  const [amount, setAmount] = useState();
-  const [date, setDate] = useState();
+  const [name] = useState();
+  const [amount] = useState();
+  const [date] = useState();
   const [loading, setLoading] = useState(false);
 
   const handleDialog = () => {

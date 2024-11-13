@@ -5,16 +5,13 @@ import { MdUpload } from "react-icons/md";
 import {
   Disclosure,
   DisclosureButton,
-  DisclosurePanel,
-  Switch,
+  DisclosurePanel
 } from "@headlessui/react";
 import UserContext from "../../context/UserContext";
 import axios from "axios";
 import showToastMessage from "../toast/Toast";
-import { useNavigate } from "react-router-dom";
 
 const ActiveAccount = () => {
-  let navigate = useNavigate();
   const { user, setUser, token} = useContext(UserContext);
 
   const [disclosure, setDisclosure] = useState(false);
@@ -29,7 +26,7 @@ const ActiveAccount = () => {
   const [transactionRecipt, setTransactionRecipt] = useState("");
   const [transactionReciptFileName, setTransactionReciptFileName] =
     useState("");
-  const [transactionReciptURL, setTransactionReciptURL] = useState("");
+  const [transactionReciptURL] = useState("");
 
   console.log(emailSame);
   console.log(transactionRecipt);

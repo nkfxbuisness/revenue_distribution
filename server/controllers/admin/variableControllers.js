@@ -1,4 +1,4 @@
-const Variable = require("../models/variableModel");
+const Variable = require("../../models/variableModel");
 
 const addVariable = async (req, res) => {
   const { key, value } = req.body;

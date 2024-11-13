@@ -26,6 +26,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "resolutions": {
+    "babel-preset-react-app/@babel/plugin-proposal-private-property-in-object": "latest"
+  },
   "eslintConfig": {
     "extends": [
       "react-app",

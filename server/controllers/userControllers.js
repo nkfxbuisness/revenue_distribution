@@ -3,6 +3,8 @@ const bcrypt = require("bcryptjs");
 const WithdrawalRequest = require("../models/withdrawalRequestModel");
 const Variable = require("../models/variableModel");
 const { default: mongoose } = require("mongoose");
+const Announcement = require("../models/announcementModel");
+const Claim = require("../models/claimModel");
 
 /**
  * Route     /api/user/getDashboardDetails/:userId
@@ -638,6 +640,111 @@ const getTeamDetails = async (req, res) => {
   }
 };
 
+const getAllAnnouncements = async(req,res)=>{
+  try {
+    const announcements = await Announcement.find();
+    return res.status(200).json({
+      success:true,
+      data:announcements
+    })
+  } catch (error) {
+    return res.status(500).json({
+      success:false,
+      message:"Failed to get all announcements"
+    })
+  }
+}
+
+const getTotalBusiness = async(req,res)=>{
+  const { id } = req.params;
+
+  try {
+    // MongoDB aggregation to calculate total copy proportion up to 20 levels deep
+    const result = await User.aggregate([
+      {
+        $match: { _id:new mongoose.Types.ObjectId(id) }  // Start with the specified user
+      },
+      {
+        $graphLookup: {
+          from: 'users',  // Collection name where User documents are stored
+          startWith: '$_id',  // Start from the user's ID
+          connectFromField: '_id',  // Connect from the ID of each user
+          connectToField: 'parent',  // Connect to the `parent` field of each user
+          as: 'descendants',  // The field to store the resulting hierarchy
+          maxDepth: 20,  // Maximum depth level
+          restrictSearchWithMatch: {
+            'activationStatus.active': true,
+            'activationStatus.suspended': false
+          }
+        }
+      },
+      {
+        $unwind: '$descendants'
+      },
+      {
+        $group: {
+          _id: null,
+          totalCopyProportion: { $sum: '$descendants.copyProportion' }  // Sum copyProportion for all valid descendants
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          totalCopyProportion: 1
+        }
+      }
+    ]);
+
+    // Return the calculated total copy proportion
+    res.json({success:true, totalCopyProportion: result.length ? result[0].totalCopyProportion : 0 });
+  } catch (error) {
+    console.error("Error calculating total copy proportion:", error);
+    res.json({success:false, message: "Error getting total business" });
+  }
+}
+
+const claimReward = async(req,res)=>{
+  const {userName , milestone} = req.body;
+  const {id} = req.params;
+  if(!userName || !milestone || !id){
+    return res.json({
+      success:false,
+      message:"didn't get important parameters"
+    })
+  }
+  try {
+    const user = await User.findById(id);
+
+    if(user.rewards[milestone-1].rewardClaimed){
+      return res.json({
+        success:false,
+        message:"already claimed !!"
+      })
+    }
+    
+    await Claim.create({
+      user:id,
+      name:userName,
+      milestone,
+    });
+
+    user.rewards[milestone-1].rewardClaimed = true;
+    await user.save();
+
+    return res.status(200).json({
+      success:true,
+      message:"Claim submitted !"
+    })
+  } catch (error) {
+    console.error(error)
+    return res.json({
+      success:false,
+      message:"Failed to submit the claim"
+    })
+  }
+}
+
+
 module.exports = {
   activateAccount,
   reActiveAccount,
@@ -649,4 +756,7 @@ module.exports = {
   getWithdrawlPageData,
   getChildrenLevelWise,
   getTeamDetails,
+  getAllAnnouncements,
+  getTotalBusiness,
+  claimReward
 };

@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import getFormattedDate from "../toast/getFormattedDate";
 import { MdOutlineFilterList } from "react-icons/md";
-import { FiRefreshCcw } from "react-icons/fi";
 import { MdClear } from "react-icons/md";
 import showToastMessage from "../toast/Toast";
 import UserContext from "../../context/UserContext";
@@ -26,58 +25,58 @@ const TotalBusiness = () => {
     }
     return true;
   }
-  const [response, setResponse] = useState([
-    {
-      _id: 0,
-      users: [
-        {
-          name: "A2",
-          activeOn: "2024-09-04T07:38:01.572Z",
-          copyProportion: 2,
-        },
-        {
-          name: "A1",
-          activeOn: "2024-09-04T07:37:31.724Z",
-          copyProportion: 2,
-        },
-        {
-          name: "A3",
-          activeOn: "2024-09-04T07:38:11.799Z",
-          copyProportion: 2,
-        },
-      ],
-    },
-    {
-      _id: 1,
-      users: [
-        {
-          name: "B1",
-          activeOn: "2024-09-04T07:45:07.689Z",
-          copyProportion: 2,
-        },
-        {
-          name: "B3",
-          activeOn: "2024-09-04T07:46:22.080Z",
-          copyProportion: 2,
-        },
-        {
-          name: "B2",
-          activeOn: "2024-09-04T07:45:37.795Z",
-          copyProportion: 2,
-        },
-        {
-          name: "B4",
-          activeOn: "2024-09-04T07:46:31.766Z",
-          copyProportion: 2,
-        },
-        {
-          name: "B5",
-          activeOn: "2024-09-04T07:47:43.465Z",
-          copyProportion: 2,
-        },
-      ],
-    },
-  ]);
+  // const [response, setResponse] = useState([
+  //   {
+  //     _id: 0,
+  //     users: [
+  //       {
+  //         name: "A2",
+  //         activeOn: "2024-09-04T07:38:01.572Z",
+  //         copyProportion: 2,
+  //       },
+  //       {
+  //         name: "A1",
+  //         activeOn: "2024-09-04T07:37:31.724Z",
+  //         copyProportion: 2,
+  //       },
+  //       {
+  //         name: "A3",
+  //         activeOn: "2024-09-04T07:38:11.799Z",
+  //         copyProportion: 2,
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     _id: 1,
+  //     users: [
+  //       {
+  //         name: "B1",
+  //         activeOn: "2024-09-04T07:45:07.689Z",
+  //         copyProportion: 2,
+  //       },
+  //       {
+  //         name: "B3",
+  //         activeOn: "2024-09-04T07:46:22.080Z",
+  //         copyProportion: 2,
+  //       },
+  //       {
+  //         name: "B2",
+  //         activeOn: "2024-09-04T07:45:37.795Z",
+  //         copyProportion: 2,
+  //       },
+  //       {
+  //         name: "B4",
+  //         activeOn: "2024-09-04T07:46:31.766Z",
+  //         copyProportion: 2,
+  //       },
+  //       {
+  //         name: "B5",
+  //         activeOn: "2024-09-04T07:47:43.465Z",
+  //         copyProportion: 2,
+  //       },
+  //     ],
+  //   },
+  // ]);
   const [levelwiseUsers, setLevelwiseUsers] = useState([]);
   const [storedLevelwiseUsers, setStoredLevelwiseUsers] = useState([]);
   console.log("storedLevelwiseUsers", storedLevelwiseUsers);

@@ -1,13 +1,9 @@
-import React, { useContext, useState } from "react";
-import { HiOutlineEye } from "react-icons/hi";
-import { HiOutlineEyeOff } from "react-icons/hi";
-import { GrValidate } from "react-icons/gr";
+import React, { useContext} from "react";
 import { StepperContext } from "../../../context/StepperContext";
-import showToastMessage from "../../toast/Toast";
+
 
 const BasicInfo = () => {
-  const [show, setShow] = useState(false);
-  const {userData,setUserData,finalData,setFinalData,errors}=useContext(StepperContext);
+  const {userData,setUserData,errors}=useContext(StepperContext);
 
   const handleChange = (e)=>{
     const {name,value}=e.target;

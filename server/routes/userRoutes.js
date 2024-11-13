@@ -1,5 +1,5 @@
 const express = require('express')
-const { activateAccount, changePassword, reActiveAccount, postWithdrawalRequest, getWithdrawlPageData, getWalletPageData, getImmidiateChildren, getDashboardDetails, getChildrenLevelWise, getTeamDetails } = require('../controllers/userControllers')
+const { activateAccount, changePassword, reActiveAccount, postWithdrawalRequest, getWithdrawlPageData, getWalletPageData, getImmidiateChildren, getDashboardDetails, getChildrenLevelWise, getTeamDetails, getAllAnnouncements, claimReward, getTotalBusiness } = require('../controllers/userControllers')
 const { authenticate, authorizeRoles } = require('../middleware/accessablityMidddleWare')
 const Router = express.Router()
 
@@ -13,6 +13,9 @@ Router.get('/getImmidiateChildren/:id',authenticate, authorizeRoles(['user']),ge
 Router.get('/getWithdrawlPageData/:id',authenticate, authorizeRoles(['user']),getWithdrawlPageData)
 Router.get('/getChildrenLevelWise/:id',authenticate, authorizeRoles(['user']),getChildrenLevelWise)
 Router.get('/getTeamDetails/:id',authenticate, authorizeRoles(['user']),getTeamDetails)
+Router.get('/getAllAnnouncements/:id',authenticate, authorizeRoles(['user']),getAllAnnouncements)
+Router.get('/getTotalBusiness/:id',authenticate, authorizeRoles(['user']),getTotalBusiness)
+Router.post('/claimReward/:id',authenticate, authorizeRoles(['user']),claimReward)
 
 
 module.exports = Router

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext} from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { MdDashboard } from "react-icons/md";
 import { FaWallet } from "react-icons/fa";
@@ -8,6 +8,8 @@ import { BiLogOut } from "react-icons/bi";
 import { GrValidate } from "react-icons/gr";
 import { MdOutlineManageAccounts } from "react-icons/md";
 import { AiOutlineDollar } from "react-icons/ai";
+import { FaTrophy } from "react-icons/fa6";
+import { GrAnnounce } from "react-icons/gr";
 import UserContext from "../../context/UserContext";
 // import
 
@@ -65,6 +67,18 @@ const Sidebar = () => {
       route: `teamBusiness/${user?._id}`,
       icon: <RiTeamLine />,
       isActive: currentPath.includes("teamBusiness"),
+    },
+    {
+      name: "Announcements",
+      route: `announcements/${user?._id}`,
+      icon: <GrAnnounce />,
+      isActive: currentPath.includes("announcements"),
+    },
+    {
+      name: "Rewards",
+      route: `rewards/${user?._id}`,
+      icon: <FaTrophy />,
+      isActive: currentPath.includes("rewards"),
     },
     // {
     //   name: "Logout",

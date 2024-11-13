@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { HiOutlineArrowSmUp } from "react-icons/hi";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import UserContext from '../../context/UserContext';
@@ -15,10 +14,13 @@ const Dashboard = () => {
   const [totalChildren,setTotalChildren]=useState(10);
   const [firstLevelChildren,setFirstLevelChildren]=useState(5);
   const [totalCopyProportion,setTotalCopyProportion]=useState(20);
-
+  
+  
   const ifSuspendedOrInactive=()=>{
     if(user.activationStatus.suspended){
-      navigate(`/user/suspended/${user._id}`);
+      navigate(`/user/suspended/${user._id}`,{
+        state:user  //{suspentionRemarks : user.activationStatus.suspentionRemarks}
+      });
       return false;
     }
     if(!user.activationStatus.active){
@@ -70,7 +72,7 @@ const Dashboard = () => {
               <div className='flex gap-2'>
                 <p className='text-3xl font-extrabold text-left'> $ {100*(user.copyProportion)}</p>
               </div> 
-              <p className='flex text-sm font-thin '><a target='_blank' href='https://my.octabroker.com/login/?back=%2F&fromFront=1' className='flex items-center gap-1 font-semibold pr-1 underline cursor-pointer'>Login to OctaFx <FaExternalLinkAlt/></a>  to get the current account balance</p> 
+              <p className='flex text-sm font-thin '><a target='_blank' rel='noopener noreferrer' href='https://my.octabroker.com/login/?back=%2F&fromFront=1' className='flex items-center gap-1 font-semibold pr-1 underline cursor-pointer'>Login to OctaFx <FaExternalLinkAlt/></a>  to get the current account balance</p> 
             </div>
 
             {/* wallet balaance */}

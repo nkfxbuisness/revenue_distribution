@@ -1,11 +1,11 @@
-import React, { useState, useContext } from "react";
+import React, { useState} from "react";
 import { HiOutlineEye } from "react-icons/hi";
 import { HiOutlineEyeOff } from "react-icons/hi";
 import { HiArrowSmallRight } from "react-icons/hi2";
 import showToastMessage from "../components/toast/Toast";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import UserContext, { checkTokenExpiration } from "../context/UserContext";
+// import UserContext, { checkTokenExpiration } from "../context/UserContext";
 
 const AdminLogin = () => {
   let navigate = useNavigate();
@@ -13,7 +13,7 @@ const AdminLogin = () => {
   // console.log(user, token);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [mobile, setMobile] = useState("");
+  // const [mobile, setMobile] = useState("");
   const [show, setShow] = useState(false);
 
   const submit = async () => {

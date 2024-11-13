@@ -5,16 +5,20 @@ import {HiArrowSmallRight} from "react-icons/hi2"
 import showToastMessage from "../components/toast/Toast";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import UserContext, { checkTokenExpiration } from "../context/UserContext";
+import UserContext from "../context/UserContext";
+import { FaExternalLinkAlt } from "react-icons/fa";
 
 const LoginPage = () => {
   let navigate = useNavigate();
-  const {user,setUser,token,setToken} = useContext(UserContext)
+  const {setUser,setToken} = useContext(UserContext)
   // console.log(user,token)
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [mobile, setMobile] = useState("");
+  // const [mobile, setMobile] = useState("");
   const [show, setShow] = useState(false);
+  const navigateToSignup = ()=>{
+    navigate("/auth/register")
+  }
 
   const submit = async () => {
     if (!email || !password) {
@@ -116,6 +120,9 @@ const LoginPage = () => {
             Login
             <HiArrowSmallRight className="text-2xl" />
           </button>
+          <p className="flex gap-2 justify-center items-center text-blue-600 font-thin text-lg">Don't have an account ?
+            <span className="flex font-semibold pl-2 gap-1 items-center underline cursor-pointer" onClick={navigateToSignup}>Signup <FaExternalLinkAlt/></span>
+          </p>
         </div>
       </div>
     </>
