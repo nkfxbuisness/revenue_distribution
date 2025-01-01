@@ -13,6 +13,10 @@ const userSchema = require("../config/dataValidation/signupData");
  * Method    POST
  */
 const userLogin = async (req, res) => {
+
+  // console.log('Cookies: ', req)
+  
+
   const { email, password } = req.body;
   if (!email || !password) {
     return res.status(400).json({
@@ -20,9 +24,10 @@ const userLogin = async (req, res) => {
       message: "credentials not provideded !!",
     });
   }
-  console.log(password);
+  // console.log(password);
   
   try {
+    console.log('Cookies: ', req.cookies)
     let user = await User.findOne({ email: email });
     // console.log("user", user);
 
@@ -30,7 +35,7 @@ const userLogin = async (req, res) => {
       user=user.toObject();
       delete user.password;
       const userWithoutPassword = user;
-      console.log(userWithoutPassword);
+      // console.log(userWithoutPassword);
       return res.status(200).json({
         success: true,
         message: "login successful !",

@@ -1,27 +1,27 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { FaTrophy } from "react-icons/fa";
-import showToastMessage from "../toast/Toast";
+import showToastMessage from "../../util/toast/Toast";
 import UserContext from "../../context/UserContext";
 import { useNavigate } from "react-router-dom";
-import Spinner from "../toast/animation/Spinner";
-import PulseLoader from "../toast/animation/PulseLoader";
+import Spinner from "../../util/animation/Spinner"
+import PulseLoader from "../../util/animation/PulseLoader";
 
-const TeamBuisness = () => {
+const TeamBuisness = ({ifSuspendedOrInactive}) => {
   const { user, token } = useContext(UserContext);
   let navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const ifSuspendedOrInactive = () => {
-    if (user.activationStatus.suspended) {
-      navigate(`/user/suspended/${user._id}`);
-      return false;
-    }
-    if (!user.activationStatus.active) {
-      navigate(`/user/activeAccount/${user._id}`);
-      return false;
-    }
-    return true;
-  };
+  // const ifSuspendedOrInactive = () => {
+  //   if (user.activationStatus.suspended) {
+  //     navigate(`/user/suspended/${user._id}`);
+  //     return false;
+  //   }
+  //   if (!user.activationStatus.active) {
+  //     navigate(`/user/activeAccount/${user._id}`);
+  //     return false;
+  //   }
+  //   return true;
+  // };
   // const [response, setResponse] = useState({
   //   _id: null,
   //   immediateChildren: [

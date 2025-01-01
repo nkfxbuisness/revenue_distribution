@@ -5,24 +5,24 @@ import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react
 import { IoIosArrowUp } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
 import UserContext from '../../context/UserContext';
-import showToastMessage from '../toast/Toast';
+import showToastMessage from '../../util/toast/Toast';
 import axios from 'axios';
 import {useNavigate} from "react-router-dom"
 
-const Withdraw = () => {
+const Withdraw = ({ifSuspendedOrInactive}) => {
   let navigate = useNavigate();
   const {user,token} = useContext(UserContext);
-  const ifSuspendedOrInactive=()=>{
-    if(user.activationStatus.suspended){
-      navigate(`/user/suspended/${user._id}`);
-      return false;
-    }
-    if(!user.activationStatus.active){
-      navigate(`/user/activeAccount/${user._id}`)
-      return false;
-    }
-    return true;
-  }
+  // const ifSuspendedOrInactive=()=>{
+  //   if(user.activationStatus.suspended){
+  //     navigate(`/user/suspended/${user._id}`);
+  //     return false;
+  //   }
+  //   if(!user.activationStatus.active){
+  //     navigate(`/user/activeAccount/${user._id}`)
+  //     return false;
+  //   }
+  //   return true;
+  // }
   const [disclosure,setDisclosure]=useState(false);
   const [amount,setAmount]= useState("");
   const [inputFieldDisabled,setInputFieldDisabled]=useState(false);

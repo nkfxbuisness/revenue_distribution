@@ -9,7 +9,7 @@ const { getAllWithdrawalRequests, downloadInCSVformat, updatePaidStatus } = requ
 const { postAnnouncement, deleteAnnouncement, getAllAnnouncements } = require("../controllers/admin/announcementControllers")
 const { settleAClaim, getUserDetailsForClaim, getAllClaims } = require("../controllers/admin/claimReward");
 const { findUserBy, suspendAUser } = require("../controllers/admin/userSuspendControllers");
-const calculateComissionForASingleUser = require("../controllers/admin/ComissionControllers");
+const {totalProfitForAMonth, downloadComissionRepost, calculateComission, trackProgress} = require("../controllers/admin/ComissionControllers");
 
 
 const Router = express.Router();
@@ -41,20 +41,23 @@ Router.get("/getVariable/:key",getVariable  );
 Router.put("/updateVariable/:key",updateVariable  );
 
 // comission calculation 
-Router.post("/calculateComissionForASingleUser",calculateComissionForASingleUser  );
+Router.get("/totalProfitForAMonth/:month",authenticate, authorizeRoles(['superAdmin']),totalProfitForAMonth  );
+Router.get("/downloadComissionRepost/:month",authenticate, authorizeRoles(['superAdmin']),downloadComissionRepost  );
+Router.post("/calculateComission",authenticate, authorizeRoles(['superAdmin']),calculateComission  );
+Router.get("/trackProgress/:month",authenticate, authorizeRoles(['superAdmin']),trackProgress  );
 
 // post announcement 
-Router.post("/postAnnouncement",postAnnouncement  );
-Router.delete("/deleteAnnouncement/:id",deleteAnnouncement  );
-Router.get("/getAllAnnouncements",getAllAnnouncements  );
+Router.post("/postAnnouncement",authenticate, authorizeRoles(['superAdmin']),postAnnouncement  );
+Router.delete("/deleteAnnouncement/:id",authenticate, authorizeRoles(['superAdmin']),deleteAnnouncement  );
+Router.get("/getAllAnnouncements",authenticate, authorizeRoles(['superAdmin']),getAllAnnouncements  );
 
 // suspend user 
-Router.post("/findUserBy",findUserBy  );
-Router.post("/suspendAUser/:id",suspendAUser  );
+Router.post("/findUserBy",authenticate, authorizeRoles(['superAdmin']),findUserBy  );
+Router.post("/suspendAUser/:id",authenticate, authorizeRoles(['superAdmin']),suspendAUser  );
 
 // reward claims
-Router.get("/getAllClaims",getAllClaims  );
-Router.get("/getUserDetailsForClaim/:id",getUserDetailsForClaim  );
-Router.get("/settleAClaim/:id",settleAClaim  );
+Router.get("/getAllClaims",authenticate, authorizeRoles(['superAdmin']),getAllClaims  );
+Router.get("/getUserDetailsForClaim/:id",authenticate, authorizeRoles(['superAdmin']),getUserDetailsForClaim  );
+Router.get("/settleAClaim/:id",authenticate, authorizeRoles(['superAdmin']),settleAClaim  );
 
 module.exports = Router;

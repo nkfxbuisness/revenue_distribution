@@ -1,12 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import showToastMessage from "../toast/Toast";
-import getFormattedDate from "../toast/getFormattedDate";
+import showToastMessage from "../../util/toast/Toast";
+import getFormattedDate from "../../util/date/getFormattedDate";
 import AdminContext from "../../context/AdminContext";
 import { LuRefreshCw } from "react-icons/lu";
-import Spinner from "../toast/animation/Spinner";
-import PulseLoader from "../toast/animation/PulseLoader";
+import Spinner from "../../util/animation/Spinner";
+import PulseLoader from "../../util/animation/PulseLoader";
+
+
 const AccountActivationList = () => {
   const [inactiveUsers, setInactiveUsers] = useState([]);
   const { token } = useContext(AdminContext);
@@ -58,8 +60,8 @@ const AccountActivationList = () => {
 
         {/* table header  */}
         <div className="sticky top-12 mt-2 flex px-3 py-1 text-sm w-full  bg-blue-600 text-white text-center font-semibold rounded-md items-center text-wrap">
-          <div class=" text-center py-2 px-2  w-1/12">No</div>
-          <div class=" text-center py-2 px-2 border-l-2 border-white w-3/12">
+          <div className=" text-center py-2 px-2  w-1/12">No</div>
+          <div className=" text-center py-2 px-2 border-l-2 border-white w-3/12">
             Name
           </div>
           <div className=" text-center py-2 px-2 border-l-2 border-white w-3/12">

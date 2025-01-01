@@ -1,4 +1,4 @@
-import React, { useContext} from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { RiTeamLine } from "react-icons/ri";
 import { BiLogOut } from "react-icons/bi";
@@ -13,7 +13,9 @@ import AdminContext from "../../context/AdminContext";
 
 const Sidebar = () => {
   let navigate = useNavigate();
-  const {setAdmin, setToken } = useContext(AdminContext);
+  const { admin, setAdmin, setToken } = useContext(AdminContext);
+  console.log("admin", admin);
+
   const logoutHandler = () => {
     localStorage.removeItem("adminInfo");
     localStorage.removeItem("adminToken");
@@ -84,6 +86,10 @@ const Sidebar = () => {
     //   icon: <BiLogOut />,
     // },
   ];
+  const [allowed, setAllowed] = useState(admin.roles);
+  const filteredFields = allowed.includes("superAdmin") // Render all fields if "superAdmin" is in allowed
+    ? fields
+    : fields.filter((field) => allowed.includes(field.route));
 
   return (
     <>
@@ -91,24 +97,19 @@ const Sidebar = () => {
         className=" flex flex-col h-screen fixed right-0 bg-white pl-0 pr-3 py-5 mx-2 mt-12"
         style={{ width: 285 }}
       >
-        {fields.map((field,index) => (
-          <>
-            {field.isActive ? (
-              <Link to={`${field.route}`} key={index}>
-                <div className="w-full h-10 bg-blue-50 text-blue-800 border-l-2 border-blue-800 font-bold flex my-2 rounded-r-md pr-2 pl-5 py-4 gap-2 items-center">
-                  <span className="text-2xl items-center ">{field.icon}</span>
-                  {field.name}
-                </div>
-              </Link>
-            ) : (
-              <Link to={`${field.route}`} key={index}>
-                <div className="w-full h-10 bg-white flex  my-2 rounded-r-md pr-2 pl-5 py-4  gap-2 items-center">
-                  <span className="text-2xl items-center ">{field.icon}</span>
-                  {field.name}
-                </div>
-              </Link>
-            )}
-          </>
+        {filteredFields.map((field, index) => (
+          <Link to={`${field.route}`} key={index}>
+            <div
+              className={`w-full h-10 flex my-2 rounded-r-md pr-2 pl-5 py-4 gap-2 items-center ${
+                field.isActive
+                  ? "bg-blue-50 text-blue-800 border-l-2 border-blue-800 font-bold"
+                  : "bg-white"
+              }`}
+            >
+              <span className="text-2xl items-center ">{field.icon}</span>
+              {field.name}
+            </div>
+          </Link>
         ))}
         <div
           className="w-full h-10 bg-white flex  my-2 rounded-r-md pr-2 pl-5 py-4  gap-2 items-center cursor-pointer"

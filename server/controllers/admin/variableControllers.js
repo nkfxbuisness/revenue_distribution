@@ -52,7 +52,9 @@ const getVariable = async (req, res) => {
 const updateVariable = async (req, res) => {
     const {key} = req.params;
     const { value } = req.body;
-  
+
+    console.log(key,value);
+    
     try {
       const updatedVariable = await Variable.findOneAndUpdate(
         { key },

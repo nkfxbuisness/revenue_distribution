@@ -8,7 +8,7 @@ const adminSchema = new mongoose.Schema({
   email: { type: String, required: true },
   roles: {
     type: [String], // Array of strings
-    enum: ["accountActivation","withdrawRequest","profitUpdate","updateDiposite","ComissionDistribution","createAdmin","superAdmin"], // Allowed values
+    enum: ["accountActivation","withdrawRequest","profitUpdate","ComissionDistribution","createAdmin","postAnnouncement","rewards","suspendAUser","superAdmin"], // Allowed values
     required: true,
   },
   isSuperAdmin: { type: Boolean, required: false },

@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import { LuRefreshCw } from "react-icons/lu";
 import UserContext from "../../context/UserContext";
-import showToastMessage from "../toast/Toast";
+import showToastMessage from "../../util/toast/Toast";
 import axios from "axios";
-import getFormattedDate from "../toast/getFormattedDate";
+import getFormattedDate from "../../util/date/getFormattedDate";
 import { FaExternalLinkAlt } from "react-icons/fa";
-import Spinner from "../toast/animation/Spinner";
-import PulseLoader from "../toast/animation/PulseLoader";
+import Spinner from "../../util/animation/Spinner";
+import PulseLoader from "../../util/animation/PulseLoader";
 
-const Announcements = () => {
+const Announcements = ({ifSuspendedOrInactive}) => {
   const { user, token } = useContext(UserContext);
   const [announcements, setAnnouncements] = useState([]);
   const [loading,setLoading] = useState(false);
@@ -39,7 +39,8 @@ const Announcements = () => {
     }
   };
   useEffect(() => {
-    getAllAnnouncements();
+    let temp = ifSuspendedOrInactive();
+    if (temp) getAllAnnouncements();
   }, []);
 
   return (

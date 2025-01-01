@@ -1,29 +1,29 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import showToastMessage from "../toast/Toast";
+import showToastMessage from "../../util/toast/Toast";
 import UserContext from "../../context/UserContext";
-import getFormattedDate from "../toast/getFormattedDate";
+import getFormattedDate from "../../util/date/getFormattedDate";
 import { GoArrowDownLeft } from "react-icons/go";
 import { GoArrowUpRight } from "react-icons/go";
 import {useNavigate} from "react-router-dom"
-import WhiteSpinner from '../toast/animation/WhiteSpinner'
-import PulseLoader from '../toast/animation/PulseLoader'
+import WhiteSpinner from '../../util/animation/WhiteSpinner'
+import PulseLoader from '../../util/animation/PulseLoader'
 
-const Wallet = () => {
+const Wallet = ({ifSuspendedOrInactive}) => {
   let navigate = useNavigate();
   const { user, token } = useContext(UserContext);
   const [loading,setLoading]=useState(false);
-  const ifSuspendedOrInactive=()=>{
-    if(user.activationStatus.suspended){
-      navigate(`/user/suspended/${user._id}`);
-      return false;
-    }
-    if(!user.activationStatus.active){
-      navigate(`/user/activeAccount/${user._id}`)
-      return false;
-    }
-    return true;
-  }
+  // const ifSuspendedOrInactive=()=>{
+  //   if(user.activationStatus.suspended){
+  //     navigate(`/user/suspended/${user._id}`);
+  //     return false;
+  //   }
+  //   if(!user.activationStatus.active){
+  //     navigate(`/user/activeAccount/${user._id}`)
+  //     return false;
+  //   }
+  //   return true;
+  // }
   const [walletBalance, setWalletBalance] = useState(0);
   const [transactions, setTransactions] = useState([]);
   const getWalletPageData = async () => {
@@ -80,20 +80,20 @@ const Wallet = () => {
         <div className="w-full text-left rounded-md">
           {/* table header  */}
           <div className="sticky top-12 mt-2 flex px-3 py-1 text-sm w-full  bg-blue-600 text-white text-center font-semibold rounded-md items-center text-wrap">
-            <div class=" text-center py-2 px-2  w-1/12">No</div>
-            <div class=" text-center py-2 px-2 border-l-2 border-white w-2/12">
+            <div className=" text-center py-2 px-2  w-1/12">No</div>
+            <div className=" text-center py-2 px-2 border-l-2 border-white w-2/12">
               Dedit/Credit
             </div>
-            <div class=" text-center py-2 px-2 border-l-2 border-white w-3/12">
+            <div className=" text-center py-2 px-2 border-l-2 border-white w-3/12">
               Date
             </div>
-            <div class=" text-center py-2 px-2 border-l-2 border-white w-3/12">
+            <div className=" text-center py-2 px-2 border-l-2 border-white w-3/12">
               Paid on
             </div>
-            <div class=" text-center py-2 px-2 border-l-2 border-white w-1/12">
+            <div className=" text-center py-2 px-2 border-l-2 border-white w-1/12">
               Amount
             </div>
-            <div class=" text-center py-2 px-2 border-l-2 border-white w-2/12">
+            <div className=" text-center py-2 px-2 border-l-2 border-white w-2/12">
               Status
             </div>
           </div>

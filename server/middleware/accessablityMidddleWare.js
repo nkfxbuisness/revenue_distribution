@@ -18,17 +18,17 @@ const authenticate = async (req, res, next) => {
     const { id, roles } = decoded; // Assuming the token payload contains id and roles
 
     // Determine the correct model to query based on the roles
-    let user;
+    let user = {id:id,roles:roles};
 
-    if (roles.includes('user')) {
-      user = await User.findById(id);
-    } else {
-      user = await Admin.findById(id);
-    }
+    // if (roles.includes('user')) {
+    //   user = await User.findById(id);
+    // } else {
+    //   user = await Admin.findById(id);
+    // }
 
-    if (!user) {
-      return res.json({ success:false , message: 'User not found, authorization denied' });
-    }
+    // if (!user) {
+    //   return res.json({ success:false , message: 'User not found, authorization denied' });
+    // }
 
     req.user = user;
     console.log("Authenticated as", roles);

@@ -1,4 +1,5 @@
 const Profit = require("../../models/profitModel");
+const { hasDateExceededToday, compareDates } = require("../../config/dates/compareDates")
 
 
 /**
@@ -92,6 +93,7 @@ const getLastProfitEntry = async (req, res) => {
         });
       }
     } catch (error) {
+      console.log(error);
       res.status(500).json({ message: "Server error", error: error.message });
     }
   };

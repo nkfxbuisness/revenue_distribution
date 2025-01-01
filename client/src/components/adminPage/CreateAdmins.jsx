@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { HiOutlineEye } from "react-icons/hi";
 import { HiOutlineEyeOff } from "react-icons/hi";
-import showToastMessage from "../toast/Toast";
+import showToastMessage from "../../util/toast/Toast";
 import AdminContext from "../../context/AdminContext";
 import axios from "axios";
 import EditAdminAccessDialog from "./EditAdminAccessDialog";
-import getFormattedDate from "../toast/getFormattedDate";
-import Spinner from "../toast/animation/Spinner";
-import PulseLoader from "../toast/animation/PulseLoader";
+import getFormattedDate from "../../util/date/getFormattedDate";
+import Spinner from "../../util/animation/Spinner";
+import PulseLoader from "../../util/animation/PulseLoader";
 
 const CreateAdmins = () => {
   const [loading, setLoading] = useState(false);
@@ -160,7 +160,7 @@ const CreateAdmins = () => {
           <PulseLoader repeat={5} />
         ) : (
           <>
-            {admins.length === 0 ? (
+            {admins?.length === 0 ? (
               <div className="flex h-20 bg-white rounded-lg  mt-2 items-center justify-center text-blue-600 font-semibold text-xl shadow-md">No admins present expect superAdmin</div>
             ) : (
               <>

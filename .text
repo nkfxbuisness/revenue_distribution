@@ -1,0 +1,23 @@
+alert if someone trys to leave a particular directory in my application
+report download route and implement it on forntend
+
+think off credit data schema and how to implement it on wallet history
+
+recheck of logic of withdrawal requests and optimization
+
+ensure "session expired" toast is shown in all the pages
+try to add animation on set levelwise comission split 
+
+check all pages are made private in frontend or not
+recheck all routes for optimization/documentation(postman/local) ..optimize db query (lean,select,graphLoockup)
+
+recheck the registration logic of "path"
+try to implement "resend" insteyed of manual OTP verification
+recheck the instructions specally for user side
+
+proper file/folder structuring
+consult for design/logic changes and implemet
+
+upload to github and check performance of vercal
+
+start into deployment

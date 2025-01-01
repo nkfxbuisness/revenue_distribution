@@ -4,6 +4,7 @@ import Sidebar from "../components/userPage/Sidebar";
 import { Outlet, useNavigate } from "react-router-dom";
 import { checkTokenExpiration } from "../context/UserContext";
 import UserContext from "../context/UserContext";
+import Cookies from "js-cookie"
 
 const UserHomePage = () => {
   let navigate = useNavigate();
@@ -11,11 +12,21 @@ const UserHomePage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("userInfo"));
-    console.log(storedUser);
+    let storedUser = "";
+    const temp = Cookies.get("userInfo");
+    console.log("temp",temp);
     
-    const storedToken = localStorage.getItem("token");
-    if (!storedUser || !storedToken) {
+    if(temp){
+      storedUser = JSON.parse(Cookies.get("userInfo"));
+    }
+    console.log("storedUser",storedUser);
+    
+    // const storedToken = localStorage.getItem("token");
+    const storedToken = Cookies.get("token");
+    console.log("storedToken",storedToken);
+    if (
+      // !storedUser ||
+       !storedToken) {
       console.log("no user or token found in localstorege / loggedout");
       navigate("/auth/login");
     } else if (!checkTokenExpiration(storedToken)) {

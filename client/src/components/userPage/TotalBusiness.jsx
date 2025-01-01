@@ -1,30 +1,30 @@
 import React, { useContext, useEffect, useState } from "react";
-import getFormattedDate from "../toast/getFormattedDate";
+import getFormattedDate from "../../util/date/getFormattedDate";
 import { MdOutlineFilterList } from "react-icons/md";
 import { MdClear } from "react-icons/md";
-import showToastMessage from "../toast/Toast";
+import showToastMessage from "../../util/toast/Toast";
 import UserContext from "../../context/UserContext";
 import axios from "axios";
 import {useNavigate} from "react-router-dom"
-import Spinner from "../toast/animation/Spinner"
-import WhiteSpinner from '../toast/animation/WhiteSpinner'
-import PulseLoader from "../toast/animation/PulseLoader";
+import Spinner from "../../util/animation/Spinner"
+import WhiteSpinner from '../../util/animation/WhiteSpinner'
+import PulseLoader from "../../util/animation/PulseLoader";
 
-const TotalBusiness = () => {
+const TotalBusiness = ({ifSuspendedOrInactive}) => {
   const { user, token } = useContext(UserContext);
   let navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const ifSuspendedOrInactive=()=>{
-    if(user.activationStatus.suspended){
-      navigate(`/user/suspended/${user._id}`);
-      return false;
-    }
-    if(!user.activationStatus.active){
-      navigate(`/user/activeAccount/${user._id}`)
-      return false;
-    }
-    return true;
-  }
+  // const ifSuspendedOrInactive=()=>{
+  //   if(user.activationStatus.suspended){
+  //     navigate(`/user/suspended/${user._id}`);
+  //     return false;
+  //   }
+  //   if(!user.activationStatus.active){
+  //     navigate(`/user/activeAccount/${user._id}`)
+  //     return false;
+  //   }
+  //   return true;
+  // }
   // const [response, setResponse] = useState([
   //   {
   //     _id: 0,

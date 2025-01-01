@@ -1,14 +1,16 @@
-import React, { useState} from "react";
+import React, { useContext, useState} from "react";
 import { HiOutlineEye } from "react-icons/hi";
 import { HiOutlineEyeOff } from "react-icons/hi";
 import { HiArrowSmallRight } from "react-icons/hi2";
-import showToastMessage from "../components/toast/Toast";
+import showToastMessage from "../util/toast/Toast";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import AdminContext from "../context/AdminContext";
 // import UserContext, { checkTokenExpiration } from "../context/UserContext";
 
 const AdminLogin = () => {
   let navigate = useNavigate();
+  // const { setAdmin,setToken } = useContext(AdminContext)
   // const { user, setUser, token, setToken } = useContext(UserContext);
   // console.log(user, token);
   const [password, setPassword] = useState("");
@@ -36,6 +38,7 @@ const AdminLogin = () => {
         config
       );
       console.log(data.admin);
+
       showToastMessage("success", "Login Successful !");
       navigate("/admin");
       localStorage.setItem("adminInfo", JSON.stringify(data.admin));
