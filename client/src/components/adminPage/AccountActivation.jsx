@@ -3,7 +3,7 @@ import { IoMdInformationCircleOutline } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
 import ActivationRejectionDialog from "./ActivationRejectionDialog";
 import axios from "axios";
-import showToastMessage from "../toast/Toast";
+import showToastMessage from "../../util/toast/Toast";
 import AdminContext from "../../context/AdminContext";
 
 const AccountActivation = () => {

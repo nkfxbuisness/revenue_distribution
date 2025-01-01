@@ -3,6 +3,7 @@ const moment = require("moment");
 const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 const WithdrawalRequest = require("../../models/withdrawalRequestModel");
 const Variable = require("../../models/variableModel");
+const getFormattedDate = require("../../config/dates/getFormattedDate") 
 /**
  * Route     /api/admin/getAllWithdrawalRequests
  * Des       get All Withdrawal Requests that are not paid yet

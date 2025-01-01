@@ -1,8 +1,9 @@
-import React, { useState , useContext } from "react";
+import React, { useState, useContext } from "react";
+import Cookies from "js-cookie";
 import { HiOutlineEye } from "react-icons/hi";
 import { HiOutlineEyeOff } from "react-icons/hi";
-import {HiArrowSmallRight} from "react-icons/hi2"
-import showToastMessage from "../components/toast/Toast";
+import { HiArrowSmallRight } from "react-icons/hi2";
+import showToastMessage from "../util/toast/Toast";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../context/UserContext";
@@ -10,53 +11,128 @@ import { FaExternalLinkAlt } from "react-icons/fa";
 
 const LoginPage = () => {
   let navigate = useNavigate();
-  const {setUser,setToken} = useContext(UserContext)
+  const { setUser, setToken } = useContext(UserContext);
+
   // console.log(user,token)
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [user, setUserr] = useState("");
   // const [mobile, setMobile] = useState("");
   const [show, setShow] = useState(false);
-  const navigateToSignup = ()=>{
-    navigate("/auth/register")
-  }
+  const navigateToSignup = () => {
+    navigate("/auth/register");
+  };
+
+  // const submit = async () => {
+  //   if (!email || !password) {
+  //     showToastMessage("warn", "credentials not provided !!");
+  //     return;
+  //   }
+  //   try {
+  //     const config = {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     };
+  //     const { data } = await axios.post(
+  //       "http://localhost:4000/api/auth/user/login",
+  //       {
+  //         email,
+  //         password,
+  //       },
+  //       config
+  //     );
+  //     // console.log(data);
+  //     // console.log(data.user);
+  //     const tempUser = JSON.stringify(data.user);
+  //     console.log("user",tempUser);
+  //     if (data.success) {
+  //       setUser(data.user);
+  //       setToken(data.token);
+  //       showToastMessage("success", "Login Successful !");
+
+  //       // localStorage.setItem("userInfo", JSON.stringify(data.user));
+  //       // localStorage.setItem("token", data.token);
+  //       // Store user details and token in cookies
+  //       // Cookies.set("userInfo", tempUser, {
+  //       //   expires: 7,
+  //       //   secure: true,
+  //       //   sameSite: "Strict",
+  //       // });
+  //       Cookies.set("token", data.token, {
+  //         expires: 7,
+  //         secure: true,
+  //         sameSite: "Strict",
+  //       });
+  //       Cookies.set("dd", tempUser, {
+  //         expires: 7,
+  //         secure: true,
+  //         sameSite: "Strict",
+  //       });
+  //       navigate("/user");
+  //     } else {
+  //       showToastMessage("error", data?.message);
+  //     }
+  //   } catch (error) {
+  //     showToastMessage("error", `${error}`);
+  //   }
+  // };
 
   const submit = async () => {
     if (!email || !password) {
-      showToastMessage("warn", "credentials not provided !!");
+      showToastMessage("warn", "Credentials not provided!!");
       return;
     }
     try {
       const config = {
         headers: {
-          "Content-type": "application/json",
+          "Content-Type": "application/json",
         },
       };
-      const {data} = await axios.post(
+      const { data } = await axios.post(
         "http://localhost:4000/api/auth/user/login",
         {
-            email,
-            password
+          email,
+          password,
         },
         config
       );
-      console.log(data);
-      console.log(data.user);
-      if(data.success){
+
+      if (data.success) {
         setUser(data.user);
         setToken(data.token);
-        showToastMessage("success", "Login Successful !");
-        navigate("/user");
-        localStorage.setItem("userInfo", JSON.stringify(data.user));
-        localStorage.setItem("token", data.token);
-      }else{
-        showToastMessage("error",data?.message)
-      }
+        showToastMessage("success", "Login Successful!");
 
+        // Check if the token and user data exist before setting cookies
+        if (data.token) {
+          Cookies.set("token", data.token, {
+            expires: 7,
+            sameSite: "Strict", // Adjust as needed for your environment
+          });
+        }
+
+        // if (data.user) {
+          
+        //   console.log("User data:", data.user); // Check the data
+        //   const userInfoString = JSON.stringify(data.user);
+        //   console.log("userInfoString",userInfoString);
+          
+        //   Cookies.set("userInfo", userInfoString, {
+        //     expires: 7,
+        //     // path: "/", // Uncomment if needed
+        //   });
+        //   // console.log("Cookie set:", Cookies.get("userInfo"));
+        //   console.log("Cookie", Cookies.get("userInfo"));
+        // }
+        navigate("/user");
+      } else {
+        showToastMessage("error", data?.message || "Login failed");
+      }
     } catch (error) {
-      showToastMessage("error", `${error}`);
+      showToastMessage("error", `${error.message}`);
     }
-;
   };
+
   return (
     <>
       <div className="w-full h-screen bg-blue-50 flex mx-auto">
@@ -120,8 +196,14 @@ const LoginPage = () => {
             Login
             <HiArrowSmallRight className="text-2xl" />
           </button>
-          <p className="flex gap-2 justify-center items-center text-blue-600 font-thin text-lg">Don't have an account ?
-            <span className="flex font-semibold pl-2 gap-1 items-center underline cursor-pointer" onClick={navigateToSignup}>Signup <FaExternalLinkAlt/></span>
+          <p className="flex gap-2 justify-center items-center text-blue-600 font-thin text-lg">
+            Don't have an account ?
+            <span
+              className="flex font-semibold pl-2 gap-1 items-center underline cursor-pointer"
+              onClick={navigateToSignup}
+            >
+              Signup <FaExternalLinkAlt />
+            </span>
           </p>
         </div>
       </div>

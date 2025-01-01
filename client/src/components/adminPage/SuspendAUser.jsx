@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import AdminContext from "../../context/AdminContext";
 import axios from "axios";
-import showToastMessage from "../toast/Toast";
+import showToastMessage from "../../util/toast/Toast";
 
 const SuspendAUser = () => {
   const { token } = useContext(AdminContext);

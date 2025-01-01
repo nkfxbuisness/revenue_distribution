@@ -3,11 +3,11 @@ import ProgressBar from "./ProgressBar";
 import { LuRefreshCw } from "react-icons/lu";
 import UserContext from "../../context/UserContext";
 import axios from "axios";
-import showToastMessage from "../toast/Toast";
-import Spinner from "../toast/animation/Spinner";
-import PulseLoader from "../toast/animation/PulseLoader";
+import showToastMessage from "../../util/toast/Toast";
+import Spinner from "../../util/animation/Spinner";
+import PulseLoader from "../../util/animation/PulseLoader";
 
-const Rewards = () => {
+const Rewards = ({ifSuspendedOrInactive}) => {
   const { user, token } = useContext(UserContext);
   const [claimed,setClaimed] = useState(user.rewards);
   const [totalBusiness,setTotalBusiness]=useState(0);
@@ -204,7 +204,8 @@ const Rewards = () => {
 
   const business = 40000;
   useEffect(() => {
-    getTotalBusiness();
+    let temp = ifSuspendedOrInactive();
+    if (temp) getTotalBusiness();
   }, [])
   
 

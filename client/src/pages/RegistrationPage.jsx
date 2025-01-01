@@ -9,7 +9,7 @@ import AccountDetails from "../components/auth/steps/AccountDetails";
 import KYCdetails from "../components/auth/steps/KYCdetails";
 // import Referral from "../components/auth/steps/";
 import { StepperContext } from "../context/StepperContext";
-import showToastMessage from "../components/toast/Toast";
+import showToastMessage from "../util/toast/Toast";
 import { MdOutlineLogin } from "react-icons/md";
 import userSchema from "../data_validation/signupFormValidation";
 

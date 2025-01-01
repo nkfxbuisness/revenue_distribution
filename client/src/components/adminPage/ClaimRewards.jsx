@@ -1,10 +1,10 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import AdminContext from "../../context/AdminContext";
-import showToastMessage from "../toast/Toast";
-import getFormattedDate from "../toast/getFormattedDate";
-import PulseLoader from "../toast/animation/PulseLoader";
-import Spinner from "../toast/animation/Spinner";
+import showToastMessage from "../../util/toast/Toast";
+import getFormattedDate from "../../util/date/getFormattedDate";
+import PulseLoader from "../../util/animation/PulseLoader";
+import Spinner from "../../util/animation/Spinner";
 
 const ClaimRewards = () => {
   const [loading1,setLoading1] = useState(false);
@@ -252,12 +252,12 @@ const ClaimRewards = () => {
                 key={index}
                 onClick={() => getUserDetailsForClaim(claim)}
               >
-                <div class=" text-center px-2  w-1/12">{index + 1}</div>
-                <div class=" text-center px-2  w-4/12">{claim.name}</div>
-                <div class=" text-center px-2  w-3/12">
+                <div className=" text-center px-2  w-1/12">{index + 1}</div>
+                <div className=" text-center px-2  w-4/12">{claim.name}</div>
+                <div className=" text-center px-2  w-3/12">
                   Milestone {claim.milestone}
                 </div>
-                <div class=" text-center px-2  w-4/12">
+                <div className=" text-center px-2  w-4/12">
                   {getFormattedDate(claim.createdAt)}
                 </div>
               </div>

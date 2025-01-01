@@ -1,4 +1,5 @@
 import React, { useContext} from "react";
+import Cookies from 'js-cookie';
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { MdDashboard } from "react-icons/md";
 import { FaWallet } from "react-icons/fa";
@@ -19,8 +20,10 @@ const Sidebar = () => {
   const location = useLocation();
   const currentPath = location.pathname;
   const logoutHandler = () => {
-    localStorage.removeItem("userInfo");
-    localStorage.removeItem("token");
+    // localStorage.removeItem("userInfo");
+    // localStorage.removeItem("token");
+    Cookies.remove("userInfo");
+    Cookies.remove("token");
     setUser("");
     setToken("");
     navigate("/auth/login");
@@ -93,8 +96,8 @@ const Sidebar = () => {
         className=" flex flex-col h-screen fixed right-0 bg-white pl-0 pr-3 py-5 mx-2 mt-12"
         style={{ width: 285 }}
       >
-        {user.activationStatus.suspended?"":<>
-        {user.activationStatus.active ? (
+        {user?.activationStatus?.suspended?"":<>
+        {user?.activationStatus?.active ? (
           ""
         ) : (
           <>
@@ -120,7 +123,7 @@ const Sidebar = () => {
           </>
         )}
 
-        {user?.activationStatus.active ? (
+        {user?.activationStatus?.active ? (
           <>
             {fields.map((field) => (
               <>

@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import getFormattedDate from "../toast/getFormattedDate";
+import getFormattedDate from "../../util/date/getFormattedDate";
 import AdminContext from "../../context/AdminContext";
 import axios from "axios";
-import showToastMessage from "../toast/Toast";
-import Spinner from "../toast/animation/Spinner";
-import PulseLoader from "../toast/animation/PulseLoader";
-import WhiteSpinner from "../toast/animation/WhiteSpinner";
+import showToastMessage from "../../util/toast/Toast";
+import Spinner from "../../util/animation/Spinner";
+import PulseLoader from "../../util/animation/PulseLoader";
+import WhiteSpinner from "../../util/animation/WhiteSpinner";
 
 const PostAnnouncement = () => {
   const { token } = useContext(AdminContext);
@@ -201,8 +201,8 @@ const PostAnnouncement = () => {
           <div className="flex flex-col gap-2 w-full ">
             {announcements.map((announcement,index) => (
               <div className="flex px-3 py-1 text-sm w-full bg-white text-center font-semibold rounded-md items-center text-wrap shadow-md">
-                <div class=" text-center px-2  w-1/6">{index+1}</div>
-                <div class=" text-center px-2 border-l-2 border-white w-2/6">
+                <div className=" text-center px-2  w-1/6">{index+1}</div>
+                <div className=" text-center px-2 border-l-2 border-white w-2/6">
                   {announcement.title}
                 </div>
                 <div className=" text-center px-2 border-l-2 border-white w-2/6">

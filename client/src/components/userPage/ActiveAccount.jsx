@@ -9,7 +9,7 @@ import {
 } from "@headlessui/react";
 import UserContext from "../../context/UserContext";
 import axios from "axios";
-import showToastMessage from "../toast/Toast";
+import showToastMessage from "../../util/toast/Toast";
 
 const ActiveAccount = () => {
   const { user, setUser, token} = useContext(UserContext);

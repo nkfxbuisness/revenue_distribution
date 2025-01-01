@@ -3,11 +3,15 @@ import { IoMdInformationCircleOutline } from "react-icons/io";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import UserContext from '../../context/UserContext';
 import axios from 'axios';
-import showToastMessage from '../toast/Toast';
+import showToastMessage from '../../util/toast/Toast';
 import { useNavigate } from 'react-router-dom';
-import Spinner from '../toast/animation/Spinner'
+import Spinner from '../../util/animation/Spinner'
 
-const Dashboard = () => {
+const Dashboard = ({ifSuspendedOrInactive}) => {
+
+  // console.log("gggg",ifSuspendedOrInactive);
+  
+  
   let navigate = useNavigate();
   const { user,token } = useContext(UserContext);
   const [loading,setLoading]=useState(false);
@@ -16,19 +20,19 @@ const Dashboard = () => {
   const [totalCopyProportion,setTotalCopyProportion]=useState(20);
   
   
-  const ifSuspendedOrInactive=()=>{
-    if(user.activationStatus.suspended){
-      navigate(`/user/suspended/${user._id}`,{
-        state:user  //{suspentionRemarks : user.activationStatus.suspentionRemarks}
-      });
-      return false;
-    }
-    if(!user.activationStatus.active){
-      navigate(`/user/activeAccount/${user._id}`)
-      return false;
-    }
-    return true;
-  }
+  // const ifSuspendedOrInactive=()=>{
+  //   if(user.activationStatus.suspended){
+  //     navigate(`/user/suspended/${user._id}`,{
+  //       state:user  //{suspentionRemarks : user.activationStatus.suspentionRemarks}
+  //     });
+  //     return false;
+  //   }
+  //   if(!user.activationStatus.active){
+  //     navigate(`/user/activeAccount/${user._id}`)
+  //     return false;
+  //   }
+  //   return true;
+  // }
 
   const getDashboardDetails = async () => {
     setLoading(true);
@@ -43,7 +47,7 @@ const Dashboard = () => {
         `http://localhost:4000/api/user/getDashboardDetails/${user._id}`,
         config
       );
-      console.log(data);
+      console.log("data",data);
       if(data.success){
         setTotalChildren(data.totalChildren);
         setFirstLevelChildren(data.firstLevelChildren);
@@ -57,7 +61,9 @@ const Dashboard = () => {
   };
   useEffect(() => {
     let temp = ifSuspendedOrInactive();
-    if(temp) getDashboardDetails();
+    if(temp){
+      getDashboardDetails();
+    }
 
   }, []);
   return (

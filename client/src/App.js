@@ -37,9 +37,16 @@ import SuspendAUser from "./components/adminPage/SuspendAUser";
 import Rewards from "./components/userPage/Rewards";
 import ClaimRewards from "./components/adminPage/ClaimRewards";
 import Announcements from "./components/userPage/Announcements";
+import ProtectedRoute from "./components/userPage/ProtectedRoute";
+import AdminProtectedRoute from "./components/adminPage/AdminProtectedRoute";
+import ReportGenerationPage from "./components/adminPage/comission/ReportGenerationPage";
+import SetComissionPage from "./components/adminPage/comission/SetComissionPage";
+import Distribution from "./components/adminPage/comission/Distribution";
 
 function App() {
   const { user} = useContext(UserContext);
+  // console.log("user",user);
+  
   const id = user?._id;
 
   return (
@@ -51,13 +58,13 @@ function App() {
         <Route path="/auth/temp" Component={Temp} />
         <Route path="/user" element={<UserHomePage />}>
 
-          {user && user.activationStatus.suspended?
+          {user && user?.activationStatus?.suspended?
             <Route
             path=""
             element={<Navigate to={`/user/suspended/${id}`} replace />}
           />
           :<>
-          {user && user.activationStatus.active ? (
+          {user && user?.activationStatus?.active ? (
             <Route
               path=""
               element={<Navigate to={`/user/dashboard/${id}`} replace />}
@@ -71,16 +78,16 @@ function App() {
           </> }
 
           {/* Define your routes for various paths */}
-          <Route path="dashboard/:id" element={<Dashboard />} />
-          <Route path="wallet/:id" element={<Wallet />} />
-          <Route path="withdraw/:id" element={<Withdraw />} />
-          <Route path="referral/:id" element={<Referral />} />
-          <Route path="activeAccount/:id" element={<ActiveAccount />} />
-          <Route path="totalBusiness/:id" element={<TotalBusiness />} />
-          <Route path="teamBusiness/:id" element={<TeamBuisness />} />
-          <Route path="rewards/:id" element={<Rewards />} />
+          <Route path="dashboard/:id" element={ <ProtectedRoute Component={ Dashboard} />} />
+          <Route path="wallet/:id" element={< ProtectedRoute Component={ Wallet }/>} />
+          <Route path="withdraw/:id" element={< ProtectedRoute Component={ Withdraw }/>} />
+          <Route path="referral/:id" element={< ProtectedRoute Component={ Referral }/>} />
+          <Route path="totalBusiness/:id" element={< ProtectedRoute Component={ TotalBusiness }/>} />
+          <Route path="teamBusiness/:id" element={< ProtectedRoute Component={ TeamBuisness }/>} />
+          <Route path="rewards/:id" element={< ProtectedRoute Component={ Rewards }/>} />
+          <Route path="announcements/:id" element={<ProtectedRoute Component={  Announcements }/>} />
+          <Route path="activeAccount/:id" element={< ActiveAccount />} />
           <Route path="suspended/:id" element={<AccountSuspended />} />
-          <Route path="announcements/:id" element={<Announcements />} />
         </Route>
 
         {/* Admin routes  */}
@@ -94,10 +101,10 @@ function App() {
           }
         >
           {/* <Route path="/admin" element={<Navigate to="/admin/accountActivation" />} /> */}
-          <Route path="accountActivation" element={<AccountActivationList />} />
+          <Route path="accountActivation" element={< AccountActivationList />} />
           <Route path="accountActivation/:id" element={<AccountActivation />} />
           <Route path="withdrawRequest" element={<WithdrawlRequest />} />
-          <Route path="profitUpdate" element={<ProfitUpdate />} />
+          <Route path="profitUpdate" element={<AdminProtectedRoute Component={ProfitUpdate} />} />
           <Route path="updateDiposite" element={<UpdateDiposite />} />
           <Route path="createAdmin" element={<CreateAdmin />} />
           <Route path="postAnnouncement" element={<PostAnnouncement />} />
@@ -106,6 +113,18 @@ function App() {
           <Route
             path="ComissionDistribution"
             element={<ComissionDistribution />}
+          />
+          <Route
+            path="ComissionDistribution/report"
+            element={<ReportGenerationPage />}
+          />
+          <Route
+            path="ComissionDistribution/setComission"
+            element={<SetComissionPage />}
+          />
+          <Route
+            path="ComissionDistribution/startDistributing"
+            element={<Distribution />}
           />
 
           {/* <Route path="test" element={<Test />} /> */}

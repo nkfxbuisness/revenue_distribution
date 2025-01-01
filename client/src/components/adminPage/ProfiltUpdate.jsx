@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import showToastMessage from "../toast/Toast";
+import showToastMessage from "../../util/toast/Toast";
 import AdminContext from "../../context/AdminContext";
 import axios from "axios";
-import getFormattedDate from "../toast/getFormattedDate";
+import getFormattedDate from "../../util/date/getFormattedDate";
 import { MdInfoOutline } from "react-icons/md";
 
-const ProfiltUpdate = () => {
+const ProfiltUpdate = ({checkIfAllowed}) => {
   const [date, setDate] = useState("");
   const [profit, setProfit] = useState("");
   const [lastEntry, setlastEntry] = useState("");
@@ -58,14 +58,23 @@ const ProfiltUpdate = () => {
         `http://localhost:4000/api/admin/getLastProfitEntry`,
         config
       );
-      if (!isEmptyObject(data.data)) {
-        setlastEntry(data.data.date);
+      console.log(data);
+      
+      if(!data.success){
+        showToastMessage("error",data.message)
+      }else{
+        if(!isEmptyObject(data.data)) {
+          setlastEntry(data.data.date);
+        }
       }
     } catch (error) {
-      showToastMessage("error", `${error}`);
+      // showToastMessage("error", `${error}`);
+      console.log((error));
+      
     }
   };
   useEffect(() => {
+    checkIfAllowed();
     fetchLastEntry();
   }, [fetchAgain]);
 

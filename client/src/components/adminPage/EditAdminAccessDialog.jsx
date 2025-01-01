@@ -4,7 +4,7 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import showToastMessage from "../toast/Toast";
+import showToastMessage from "../../util/toast/Toast";
 import axios from "axios";
 import AdminContext from "../../context/AdminContext";
 

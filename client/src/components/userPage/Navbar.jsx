@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { BsGraphUpArrow } from "react-icons/bs";
 import { FaCircleDot } from "react-icons/fa6";
 import { FiUser } from "react-icons/fi";
+import Cookies from 'js-cookie';
 // import { BiLogOut } from "react-icons/bi";
 import { MdOutlineLogout } from "react-icons/md";
 import UserContext from "../../context/UserContext";
@@ -11,8 +12,10 @@ const Navbar = () => {
   let navigate = useNavigate();
   const { user, setUser, setToken } = useContext(UserContext);
   const logoutHandler = () => {
-    localStorage.removeItem("userInfo");
-    localStorage.removeItem("token");
+    // localStorage.removeItem("userInfo");
+    // localStorage.removeItem("token");
+    Cookies.remove("userInfo");
+    Cookies.remove("token");
     setUser("");
     setToken("");
     navigate("/auth/login");
@@ -26,14 +29,14 @@ const Navbar = () => {
         </div>
 
         <div className="flex  gap-5 items-center justify-between">
-          {user && user.activationStatus.suspended ? (
+          {user && user?.activationStatus?.suspended ? (
             <div className="flex gap-2 justify-start items-center px-5">
               <FaCircleDot className="text-red-600 text-2xl" />
               <p className="text-lg font-semibold">Suspended</p>
             </div>
           ) : (
             <>
-              {user && user.activationStatus.active ? (
+              {user && user?.activationStatus?.active ? (
                 <div className="flex gap-2 justify-start items-center px-5">
                   <FaCircleDot className="text-green-400 text-2xl" />
                   <p className="text-lg font-semibold">Active</p>

@@ -1,4 +1,6 @@
+const { default: mongoose } = require("mongoose");
 const Claim = require("../../models/claimModel");
+const User = require("../../models/userModel");
 
 const getAllClaims = async(req,res)=>{
     try {

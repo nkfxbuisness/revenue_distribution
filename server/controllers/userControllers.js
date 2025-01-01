@@ -15,6 +15,10 @@ const Claim = require("../models/claimModel");
  */
 
 const getDashboardDetails = async (req, res) => {
+  // console.log(req.cookies);rd
+  console.log("dashboard");
+  
+  
   const { userId } = req.params;
 
   try {

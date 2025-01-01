@@ -10,27 +10,27 @@ import { IoMdInformationCircleOutline } from "react-icons/io";
 import { FaCopy } from "react-icons/fa";
 import UserContext from "../../context/UserContext";
 import axios from "axios";
-import showToastMessage from "../toast/Toast";
-import getFormattedDate from "../toast/getFormattedDate";
+import showToastMessage from "../../util/toast/Toast";
+import getFormattedDate from "../../util/date/getFormattedDate";
 import { useNavigate } from "react-router-dom";
-import Spinner from "../toast/animation/Spinner";
-import PulseLoader from "../toast/animation/PulseLoader";
+import Spinner from "../../util/animation/Spinner";
+import PulseLoader from "../../util/animation/PulseLoader";
 
-const Referral = () => {
+const Referral = ({ifSuspendedOrInactive}) => {
   let navigate = useNavigate();
   const { user, token } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
-  const ifSuspendedOrInactive = () => {
-    if (user.activationStatus.suspended) {
-      navigate(`/user/suspended/${user._id}`);
-      return false;
-    }
-    if (!user.activationStatus.active) {
-      navigate(`/user/activeAccount/${user._id}`);
-      return false;
-    }
-    return true;
-  };
+  // const ifSuspendedOrInactive = () => {
+  //   if (user.activationStatus.suspended) {
+  //     navigate(`/user/suspended/${user._id}`);
+  //     return false;
+  //   }
+  //   if (!user.activationStatus.active) {
+  //     navigate(`/user/activeAccount/${user._id}`);
+  //     return false;
+  //   }
+  //   return true;
+  // };
   const [disclosure, setDisclosure] = useState(false);
   const [children, setChildren] = useState([]);
   // console.log("children",children);
@@ -134,14 +134,14 @@ const Referral = () => {
         <div className="w-full text-left rounded-md ">
           {/* table header  */}
           <div className="sticky top-12 mt-2 flex px-2 py-1 text-sm w-full  bg-blue-600 text-white text-center font-semibold rounded-md items-center text-wrap">
-            <div class=" text-center py-2 px-2  w-1/12">No</div>
-            <div class=" text-center py-2 px-2 border-l-2 border-white w-4/12">
+            <div className=" text-center py-2 px-2  w-1/12">No</div>
+            <div className=" text-center py-2 px-2 border-l-2 border-white w-4/12">
               Name
             </div>
-            <div class=" text-center py-2 px-2 border-l-2 border-white w-4/12">
+            <div className=" text-center py-2 px-2 border-l-2 border-white w-4/12">
               Email
             </div>
-            <div class=" text-center py-2 px-2 border-l-2 border-white w-3/12">
+            <div className=" text-center py-2 px-2 border-l-2 border-white w-3/12">
               Joined on
             </div>
           </div>

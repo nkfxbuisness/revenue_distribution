@@ -10,8 +10,9 @@ const depositSchema = new mongoose.Schema({
 
 const comissionCreditSchema = new mongoose.Schema({
   amount:{type:Number,required:false},
+  month:{type:Date,required:true},
   date:{type:Date,required:true}
-})
+}, { _id: false })
 const rewardsSchema = new mongoose.Schema({
   milestoneNumber: { type: Number, required: true }, // Milestone number (1 to 11)
   rewardClaimed: { type: Boolean, default: false } // Whether the reward for this milestone is claimed
